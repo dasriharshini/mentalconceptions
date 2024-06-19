@@ -15,9 +15,29 @@ function Sketch() {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [description, setDescription] = useState('');
   const [canvas, setCanvas] = useState<CanvasPath[]>([]);
+  const [dataURI, setDataURI] = useState('');
+  const [exportedImage, setExportedImage] = useState('png');
   const router = useRouter();
 
+  const handleImage = async (canvas: ReactSketchCanvasRef) => {
+    console.log("entered handleImage")
+    const dataUrl = await canvas.exportImage("png");
+    setExportedImage(dataUrl);
+    
+    if (!dataUrl) {
+      alert("No image to download");
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.href = dataUrl;
+    link.download = 'sketch.png';
+    link.type = "image/png";
+    link.click();
+  };
+  
   const handleCanvasOnChange = (e: any) => {
+    
     const exportedCanvasPromise = canvasRef?.current?.exportPaths();
     exportedCanvasPromise?.then((result: any[]) => {
         localStorage.setItem('paths', JSON.stringify(result))
@@ -25,12 +45,19 @@ function Sketch() {
     }).catch((error: any) => {
         console.error(error);
     });
+    
+
 }
+
+const handleNextButtonClick = async (e: any) => {
+  await handleImage(canvasRef.current as ReactSketchCanvasRef);
+  handleSubmit(e);
+};
+
   
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-
     if (!description) {
       alert('Description is required');
       return;
@@ -38,6 +65,8 @@ function Sketch() {
 
     localStorage.setItem('description', description);
     router.push('/participantDetails');
+    
+    
   };
 
   return (
@@ -77,7 +106,7 @@ function Sketch() {
       </Flex>
       <Flex align="center" justify="center" mt="6">
         <Link href="/participantDetails">
-          <Button size="3" onClick={handleSubmit}>
+          <Button size="3" onClick={handleNextButtonClick}>
             Next
           </Button>
         </Link>
