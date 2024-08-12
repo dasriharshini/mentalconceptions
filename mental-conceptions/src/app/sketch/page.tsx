@@ -5,6 +5,8 @@ import { Box, Flex, Text, TextArea, Button, Strong } from '@radix-ui/themes';
 import Link from 'next/link';
 import { ReactSketchCanvas, type ReactSketchCanvasRef } from 'react-sketch-canvas';
 import { useRouter } from 'next/navigation';
+import AWS from 'aws-sdk';
+
 
 const styles = {
   border: '0.25rem solid #3E63DD',
@@ -19,7 +21,20 @@ function Sketch() {
   const [exportedImage, setExportedImage] = useState('png');
   const router = useRouter();
 
-  const handleImage = async (canvas: ReactSketchCanvasRef) => {
+  const prolificId = localStorage.getItem('prolificId')
+
+
+
+  const s3 = new AWS.S3({
+    accessKeyId: "AKIAQ3EGTCQWRCOPX5NR",
+    secretAccessKey: "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",
+    region: "eu-north-1"
+  });
+  console.log('AWS Access Key ID:', s3.config);
+
+
+
+  const handleImage = async (canvas: ReactSketchCanvasRef,prolificId:string) => {
     console.log("entered handleImage")
     const dataUrl = await canvas.exportImage("png");
     setExportedImage(dataUrl);
@@ -29,11 +44,26 @@ function Sketch() {
       return;
     }
 
-    const link = document.createElement('a');
-    link.href = dataUrl;
-    link.download = 'sketch.png';
-    link.type = "image/png";
-    link.click();
+    const blob = await fetch(dataUrl).then(res => res.blob());
+    const fileName = `${prolificId}-${Date.now()}.png`;
+
+    const params = {
+      Bucket: 'mental-conceptions-sketches',
+      Key: fileName,
+      Body: blob,
+      ContentType: 'image/png',
+      ACL: 'public-read'
+    };
+
+    s3.upload(params, (err: any, data: any) => {
+      if (err) {
+        console.error('Error uploading image:', err);
+        alert('Error uploading image');
+      } else {
+        console.log('Image uploaded successfully:', data.Location);
+        setDataURI(data.Location);
+      }
+    });
   };
   
   const handleCanvasOnChange = (e: any) => {
@@ -50,11 +80,9 @@ function Sketch() {
 }
 
 const handleNextButtonClick = async (e: any) => {
-  await handleImage(canvasRef.current as ReactSketchCanvasRef);
+  await handleImage(canvasRef.current as ReactSketchCanvasRef,prolificId || "");
   handleSubmit(e);
 };
-
-  
 
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
