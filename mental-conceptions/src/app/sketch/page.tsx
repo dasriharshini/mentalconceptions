@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import { Box, Flex, Text, TextArea, Button, Strong } from '@radix-ui/themes';
 import Link from 'next/link';
 import { ReactSketchCanvas, type ReactSketchCanvasRef } from 'react-sketch-canvas';
@@ -21,15 +21,18 @@ function Sketch() {
   const [exportedImage, setExportedImage] = useState('png');
   const router = useRouter();
 
-  const prolificId = localStorage.getItem('prolificId')
-
-
-
-  const s3 = new AWS.S3({
-    accessKeyId: "AKIAQ3EGTCQWRCOPX5NR",
-    secretAccessKey: "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",
-    region: "eu-north-1"
-  });
+  const prolificId = typeof window !== 'undefined' ? localStorage.getItem('prolificId') : '';
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      AWS.config.update({
+        accessKeyId: "AKIAQ3EGTCQWRCOPX5NR",
+        secretAccessKey: "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",
+        region: "eu-north-1"
+      });
+    }
+  }, []);
+  const s3 = new AWS.S3();
   console.log('AWS Access Key ID:', s3.config);
 
 

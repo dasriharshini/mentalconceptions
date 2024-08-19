@@ -1,7 +1,8 @@
 {
+  "/_not-found/page": "app/_not-found/page.js",
   "/page": "app/page.js",
+  "/thankyou/page": "app/thankyou/page.js",
   "/prolificId/page": "app/prolificId/page.js",
-  "/instructions/page": "app/instructions/page.js",
-  "/sketch/page": "app/sketch/page.js",
-  "/participantDetails/page": "app/participantDetails/page.js"
+  "/participantDetails/page": "app/participantDetails/page.js",
+  "/sketch/page": "app/sketch/page.js"
 }
