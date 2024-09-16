@@ -2,6 +2,7 @@
 
 import React, { useState, useRef,useEffect } from 'react';
 import { Box, Flex, Text, TextArea, Button, Strong } from '@radix-ui/themes';
+import { EraserIcon, Pencil1Icon, ResetIcon } from '@radix-ui/react-icons'
 import Link from 'next/link';
 import { ReactSketchCanvas, type ReactSketchCanvasRef } from 'react-sketch-canvas';
 import { useRouter } from 'next/navigation';
@@ -20,6 +21,23 @@ function Sketch() {
   const [dataURI, setDataURI] = useState('');
   const [exportedImage, setExportedImage] = useState('png');
   const router = useRouter();
+  const [eraseMode, setEraseMode] = useState(false);
+
+
+  const handleClearCanvasClick = () => {
+    canvasRef.current?.clearCanvas();  
+    setEraseMode(false);
+  };
+
+  const handleEraserClick = () => {
+    setEraseMode(true);
+    canvasRef.current?.eraseMode(true); // Enable eraser
+  };
+
+  const handlePenClick = () => {
+    setEraseMode(false);
+    canvasRef.current?.eraseMode(false); // Enable pen
+  };
 
   const prolificId = typeof window !== 'undefined' ? localStorage.getItem('prolificId') : '';
   
@@ -96,6 +114,8 @@ const handleNextButtonClick = async (e: any) => {
 
     localStorage.setItem('description', description);
     router.push('/participantDetails');
+
+   
     
     
   };
@@ -118,10 +138,30 @@ const handleNextButtonClick = async (e: any) => {
             How would you represent the given information?{' '}
           </Text>
           <Text size="5" weight="medium">You can sketch in this space.</Text>
+          
           <Box width="400px" height="400px">
             <ReactSketchCanvas ref={canvasRef} onChange={handleCanvasOnChange} style={styles} strokeWidth={4} strokeColor="black" />
           </Box>
-        </Flex>
+          <br/>
+          <Flex direction="row" gap="5" align="center">
+          <Button size="3" onClick={handleEraserClick}>
+            <EraserIcon/>
+            Erase
+          </Button>
+          <Button size="3" onClick={handlePenClick}>
+          <Pencil1Icon/>
+          Draw
+          </Button>
+          <Button
+          size="3"
+          disabled={eraseMode}
+          onClick={handleClearCanvasClick}>
+            <ResetIcon/>
+          Clear Canvas
+        </Button>
+          </Flex>
+          
+       </Flex>
         <Flex direction="column" ml="4" minWidth="500px" gap="4">
           <Text mt="4" mb="6" size="5" weight="medium">
             Describe your sketch
@@ -141,7 +181,9 @@ const handleNextButtonClick = async (e: any) => {
             Next
           </Button>
         </Link>
+   
       </Flex>
+  
     </>
   );
 }

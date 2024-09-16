@@ -1,8 +1,4 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/page": "app/page.js",
-  "/thankyou/page": "app/thankyou/page.js",
   "/prolificId/page": "app/prolificId/page.js",
-  "/participantDetails/page": "app/participantDetails/page.js",
   "/sketch/page": "app/sketch/page.js"
 }
