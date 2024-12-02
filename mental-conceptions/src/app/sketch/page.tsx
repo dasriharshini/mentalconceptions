@@ -46,8 +46,8 @@ function Sketch() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       AWS.config.update({
-        accessKeyId: "AKIAQ3EGTCQWRCOPX5NR",
-        secretAccessKey: "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",
+        accessKeyId: "id",
+        secretAccessKey: "key",
         region: "eu-north-1"
       });
     }
