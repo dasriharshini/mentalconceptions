@@ -14,6 +14,7 @@ const styles = {
   borderRadius: '0.75rem',
 };
 
+
 function Sketch() {
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [description, setDescription] = useState('');
@@ -22,6 +23,7 @@ function Sketch() {
   const [exportedImage, setExportedImage] = useState('png');
   const router = useRouter();
   const [eraseMode, setEraseMode] = useState(false);
+  
 
 
   const handleClearCanvasClick = () => {
@@ -124,11 +126,7 @@ const handleNextButtonClick = async (e: any) => {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the number of World Heritage Sites in{' '}
-          <Strong>Norway, Denmark, and Sweden </Strong>over two different years: 2004 and 2022. In 2004, Norway had 5
-          sites, Denmark had 4, and Sweden had 13. By 2022, the numbers increased to 8 sites for Norway, 10 for Denmark,
-          and 15 for Sweden. We will ask you to draw how you would anticipate this data should be visually communicated to
-          you in a clear and concise manner.
+          <Strong>Scenario: </Strong> Imagine you are interested in the stock prices of <Strong>Company A </Strong> and <Strong>Company B</Strong> over two different years: 2004 and 2022. In 2004, Company A had a stock price of $50, and Company B had a stock price of $40. By 2022, the stock prices increased to $80 for Company A and $100 for Company B. We will ask you to draw how you would anticipate this data should be visually communicated to you in a clear and concise manner.
         </Text>
       </Flex>
 
@@ -186,6 +184,7 @@ const handleNextButtonClick = async (e: any) => {
   
     </>
   );
+ 
 }
 
 export default Sketch;

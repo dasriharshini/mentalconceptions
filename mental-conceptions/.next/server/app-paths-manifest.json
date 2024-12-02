@@ -1,4 +1,8 @@
 {
+  "/entry/page": "app/entry/page.js",
+  "/instructions/page": "app/instructions/page.js",
+  "/page": "app/page.js",
+  "/sketch4/page": "app/sketch4/page.js",
   "/prolificId/page": "app/prolificId/page.js",
-  "/sketch/page": "app/sketch/page.js"
+  "/sketch2/page": "app/sketch2/page.js"
 }

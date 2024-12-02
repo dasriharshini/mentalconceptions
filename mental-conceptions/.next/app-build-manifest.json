@@ -21,10 +21,20 @@
       "static/chunks/main-app.js",
       "static/chunks/app/instructions/page.js"
     ],
-    "/sketch/page": [
+    "/entry/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/sketch/page.js"
+      "static/chunks/app/entry/page.js"
+    ],
+    "/sketch4/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch4/page.js"
+    ],
+    "/sketch2/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch2/page.js"
     ]
   }
 }
