@@ -16,15 +16,16 @@ function ParticipantDetails() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const prolificId = localStorage.getItem("prolificId");
-    const description = localStorage.getItem("description");
+    const description1 = localStorage.getItem("description1");
+    const description2 = localStorage.getItem("description2");
     const paths= localStorage.getItem("paths");
 
-    if (!prolificId || !description || !gender || !drawingMethod || !skills || !feedback) {
+    if (!prolificId || !description1 || !description2 || !gender || !drawingMethod || !skills || !feedback) {
       alert("Please fill in all the fields");
       return;
     }
 
-    const data = { prolificId, description, gender, drawingMethod, skills, feedback, paths: paths ? JSON.parse(paths) : []   };
+    const data = { prolificId, description1,description2, gender, drawingMethod, skills, feedback, paths: paths ? JSON.parse(paths) : []   };
 
     try {
       const res = await fetch("/api/participant", {
@@ -37,7 +38,8 @@ function ParticipantDetails() {
 
       if (res.ok) {
         localStorage.removeItem("prolificId");
-        localStorage.removeItem("description");
+        localStorage.removeItem("description1");
+        localStorage.removeItem("description2");
         localStorage.removeItem("paths");
         router.push("/thankyou");
       } else {

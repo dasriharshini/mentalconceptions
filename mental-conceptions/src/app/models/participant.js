@@ -17,7 +17,8 @@ const canvasPathSchema = new Schema({
 const participantSchema = new Schema(
   {
     prolificId: String,
-    description: String,
+    description1: String,
+    description2: String,
     gender: String,
     drawingMethod: String,
     skills: String,
