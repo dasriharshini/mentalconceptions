@@ -7,6 +7,7 @@ const pointSchema = new Schema({
 
 const canvasPathSchema = new Schema({
   paths: [pointSchema],
+  //paths2: [pointSchema],
   strokeWidth: Number,
   strokeColor: String,
   drawMode: Boolean,
@@ -23,7 +24,8 @@ const participantSchema = new Schema(
     drawingMethod: String,
     skills: String,
     feedback: String,
-    paths: [canvasPathSchema]
+    paths: [canvasPathSchema],
+    //paths2:[canvasPathSchema]
   },
   {
     timestamps: true,

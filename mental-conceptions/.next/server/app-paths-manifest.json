@@ -1,7 +1,7 @@
 {
-  "/sketch4/page": "app/sketch4/page.js",
-  "/thankyou/page": "app/thankyou/page.js",
   "/page": "app/page.js",
-  "/sketch3/page": "app/sketch3/page.js",
-  "/prolificId/page": "app/prolificId/page.js"
+  "/prolificId/page": "app/prolificId/page.js",
+  "/entry/page": "app/entry/page.js",
+  "/instructions/page": "app/instructions/page.js",
+  "/sketch4/page": "app/sketch4/page.js"
 }

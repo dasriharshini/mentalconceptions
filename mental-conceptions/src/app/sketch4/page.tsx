@@ -137,8 +137,7 @@ function Sketch() {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. By 2020, these scores increased to 72 for Red, 75 for White, and 68 for Rosé. Finally, by 2022, the scores rose further to 75 for Red, 78 for White, and 70 for Rosé.
-
+          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 73 for Red, 71 for White, and 69 for Rosé. By 2020, the scores were 68 for Red, 66 for White, and 64 for Rosé. Finally, in 2022, the scores were 63 for Red, 61 for White, and 60 for Rosé.
 We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
 
 
@@ -195,8 +194,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. By 2020, these scores increased to 72 for Red, 75 for White, and 68 for Rosé. Finally, by 2022, the scores rose further to 75 for Red, 78 for White, and 70 for Rosé.
-
+          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—across three different countries: Country A, Country B, and Country C. In Country A, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. In Country B, these scores were 72 for Red, 75 for White, and 68 for Rosé. Finally, in Country C, the scores were 70 for Red, 73 for White, and 65 for Rosé.
 We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
 
 

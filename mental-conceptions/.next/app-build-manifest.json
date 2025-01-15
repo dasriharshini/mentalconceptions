@@ -11,16 +11,6 @@
       "static/css/app/layout.css",
       "static/chunks/app/layout.js"
     ],
-    "/sketch/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/sketch/page.js"
-    ],
-    "/participantDetails/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/participantDetails/page.js"
-    ],
     "/prolificId/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
@@ -36,20 +26,10 @@
       "static/chunks/main-app.js",
       "static/chunks/app/entry/page.js"
     ],
-    "/sketch3/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/sketch3/page.js"
-    ],
     "/sketch4/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/sketch4/page.js"
-    ],
-    "/thankyou/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/thankyou/page.js"
     ]
   }
 }
