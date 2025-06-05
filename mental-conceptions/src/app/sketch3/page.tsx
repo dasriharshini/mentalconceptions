@@ -111,6 +111,10 @@ function Sketch() {
   const handleNextButtonClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
   
+    e.preventDefault();
+    const prolificId = localStorage.getItem("prolificId");
+    const paths= localStorage.getItem("paths");
+  
     // Validate descriptions
     if (!description1 || !description2) {
       alert('Both descriptions are required');
@@ -124,9 +128,29 @@ function Sketch() {
     // Handle canvas images
     await handleImage(canvasRef1.current as ReactSketchCanvasRef, prolificId || "");
     await handleImage(canvasRef2.current as ReactSketchCanvasRef, prolificId || "");
-  
-    // Navigate to the next page
-    router.push('/participantDetails');
+    const data = { prolificId, description1,description2, paths: paths ? JSON.parse(paths) : []   };
+
+    try {
+      const res = await fetch("/api/participant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("prolificId");
+        localStorage.removeItem("description1");
+        localStorage.removeItem("description2");
+        localStorage.removeItem("paths");
+        router.push("/sketch4");
+      } else {
+        throw new Error("Failed to submit the form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
   
 
@@ -137,9 +161,7 @@ function Sketch() {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. By 2020, these scores were 72 for Red, 75 for White, and 68 for Rosé. Finally, by 2022, the scores were 75 for Red, 78 for White, and 70 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
-
+          <Strong>Scenario: </Strong> This dataset shows coffee prices for the brand Robusta each month in 2019, measured in dollars per pound. Prices were highest in January at about $0.85 and then declined steadily. Small increases appeared in April and August, but the overall trend across the year was a clear drop in price.
 
         </Text>
       </Flex>
@@ -194,9 +216,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—across three different countries: Country A, Country B, and Country C. In Country A, the average quality scores were 73 for Red, 72 for White, and 70 for Rosé. In Country B, the scores were 69 for Red, 67 for White, and 65 for Rosé. In Country C, the scores were 64 for Red, 62 for White, and 61 for Rosé.
-
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
+          <Strong>Scenario: </Strong> This dataset shows the stations, total track length, and annual ridership for metro systems in three cities. Tokyo has 330 stations, 250 km of track, and the highest ridership at 3.5 billion. Paris operates 300 stations, 310 km, with 2.1 billion riders. N.Y.C., though larger with 470 stations and 460 km of track, has lower ridership (1.0 billion).
 
 
         </Text>
@@ -249,7 +269,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       
       <Flex align="center" justify="center" mt="6">
-        <Link href="/participantDetails">
+        <Link href="/sketch4">
           <Button size="3" onClick={handleNextButtonClick}>
             Next
           </Button>

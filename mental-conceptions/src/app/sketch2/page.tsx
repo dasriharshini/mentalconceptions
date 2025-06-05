@@ -110,6 +110,8 @@ function Sketch() {
     
   const handleNextButtonClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const prolificId = localStorage.getItem("prolificId");
+    const paths= localStorage.getItem("paths");
   
     // Validate descriptions
     if (!description1 || !description2) {
@@ -124,9 +126,29 @@ function Sketch() {
     // Handle canvas images
     await handleImage(canvasRef1.current as ReactSketchCanvasRef, prolificId || "");
     await handleImage(canvasRef2.current as ReactSketchCanvasRef, prolificId || "");
-  
-    // Navigate to the next page
-    router.push('/participantDetails');
+    const data = { prolificId, description1,description2, paths: paths ? JSON.parse(paths) : []   };
+
+    try {
+      const res = await fetch("/api/participant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("prolificId");
+        localStorage.removeItem("description1");
+        localStorage.removeItem("description2");
+        localStorage.removeItem("paths");
+        router.push("/sketch3");
+      } else {
+        throw new Error("Failed to submit the form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
   
 
@@ -137,8 +159,7 @@ function Sketch() {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 73 for Red, 71 for White, and 69 for Rosé. By 2020, the scores were 68 for Red, 66 for White, and 64 for Rosé. Finally, in 2022, the scores were 63 for Red, 61 for White, and 60 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
+          <Strong>Scenario: </Strong> This dataset shows unemployment rates for each U.S. state in 2020. Nevada had the highest rate of 12%, followed by Hawaii at 11% and California at 10%. In contrast, states such as Nebraska at 4.2%, Utah at 4.3%, and South Dakota at 4.6% reported much lower unemployment throughout the year.
 
 
         </Text>
@@ -194,10 +215,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—across three different countries: Country A, Country B, and Country C. In Country A, the average quality scores were 73 for Red, 72 for White, and 70 for Rosé. In Country B, the scores were 69 for Red, 67 for White, and 65 for Rosé. In Country C, the scores were 64 for Red, 62 for White, and 61 for Rosé.
-
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
-
+          <Strong>Scenario: </Strong> This dataset shows average internet speeds the year of 2021 for three major Asian countries: China, India, and Japan. Among them, China had the highest average internet speed at 78 Mbps, followed by Japan at 40 Mbps. India had the lowest speed in this group, with an average of 14 Mbps.
 
 
         </Text>
@@ -250,7 +268,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       
       <Flex align="center" justify="center" mt="6">
-        <Link href="/participantDetails">
+        <Link href="/sketch3">
           <Button size="3" onClick={handleNextButtonClick}>
             Next
           </Button>

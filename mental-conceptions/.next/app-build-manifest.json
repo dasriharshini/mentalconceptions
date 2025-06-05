@@ -21,15 +21,35 @@
       "static/chunks/main-app.js",
       "static/chunks/app/instructions/page.js"
     ],
-    "/entry/page": [
+    "/sketch/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/entry/page.js"
+      "static/chunks/app/sketch/page.js"
+    ],
+    "/sketch2/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch2/page.js"
+    ],
+    "/sketch3/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch3/page.js"
     ],
     "/sketch4/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/sketch4/page.js"
+    ],
+    "/sketch5/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch5/page.js"
+    ],
+    "/sketch6/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/sketch6/page.js"
     ]
   }
 }

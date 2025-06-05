@@ -27,6 +27,7 @@ function Sketch() {
   const router = useRouter();
   const [eraseMode, setEraseMode] = useState(false);
   
+  
 
 
   const handleClearCanvasClick = (canvas: ReactSketchCanvasRef) => {
@@ -110,6 +111,8 @@ function Sketch() {
     
   const handleNextButtonClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const prolificId = localStorage.getItem("prolificId");
+    const paths= localStorage.getItem("paths");
   
     // Validate descriptions
     if (!description1 || !description2) {
@@ -124,9 +127,31 @@ function Sketch() {
     // Handle canvas images
     await handleImage(canvasRef1.current as ReactSketchCanvasRef, prolificId || "");
     await handleImage(canvasRef2.current as ReactSketchCanvasRef, prolificId || "");
+    const data = { prolificId, description1,description2, paths: paths ? JSON.parse(paths) : []   };
+
+    try {
+      const res = await fetch("/api/participant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("prolificId");
+        localStorage.removeItem("description1");
+        localStorage.removeItem("description2");
+        localStorage.removeItem("paths");
+        router.push("/sketch5");
+      } else {
+        throw new Error("Failed to submit the form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   
-    // Navigate to the next page
-    router.push('/participantDetails');
+   
   };
   
 
@@ -137,9 +162,7 @@ function Sketch() {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 73 for Red, 71 for White, and 69 for Rosé. By 2020, the scores were 68 for Red, 66 for White, and 64 for Rosé. Finally, in 2022, the scores were 63 for Red, 61 for White, and 60 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
-
+          <Strong>Scenario: </Strong> This dataset shows the number of babies named Amelia, Isla, and Olivia in the UK from 2008 to 2011. Amelia increased from 3,600 to 5,200. Isla grew from 2,000 to 3,400, while Olivia, starting highest at 5,200, rose more gradually to 6,000. Olivia stayed the most popular, but Amelia's rapid growth closed the gap.
 
         </Text>
       </Flex>
@@ -194,9 +217,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—across three different countries: Country A, Country B, and Country C. In Country A, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. In Country B, these scores were 72 for Red, 75 for White, and 68 for Rosé. Finally, in Country C, the scores were 70 for Red, 73 for White, and 65 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
-
+          <Strong>Scenario: </Strong> This dataset shows customer counts in 10-kilometer trip intervals from 0 to 60 KM. It shows an upward trend in customers from 70 in the 0–10 KM bin to a peak of 245 in the 30–40 KM bin. After this peak, it declines to 180 in the 40–50 KM bin and further to 105 in the 50–60 KM bin.
 
         </Text>
       </Flex>
@@ -248,7 +269,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       
       <Flex align="center" justify="center" mt="6">
-        <Link href="/participantDetails">
+        <Link href="/sketch5">
           <Button size="3" onClick={handleNextButtonClick}>
             Next
           </Button>

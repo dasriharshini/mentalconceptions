@@ -110,6 +110,8 @@ function Sketch() {
     
   const handleNextButtonClick = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
+    const prolificId = localStorage.getItem("prolificId");
+    const paths= localStorage.getItem("paths");
   
     // Validate descriptions
     if (!description1 || !description2) {
@@ -124,9 +126,29 @@ function Sketch() {
     // Handle canvas images
     await handleImage(canvasRef1.current as ReactSketchCanvasRef, prolificId || "");
     await handleImage(canvasRef2.current as ReactSketchCanvasRef, prolificId || "");
-  
-    // Navigate to the next page
-    router.push('/participantDetails');
+    const data = { prolificId, description1,description2, paths: paths ? JSON.parse(paths) : []   };
+
+    try {
+      const res = await fetch("/api/participant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) {
+        localStorage.removeItem("prolificId");
+        localStorage.removeItem("description1");
+        localStorage.removeItem("description2");
+        localStorage.removeItem("paths");
+        router.push("/sketch2");
+      } else {
+        throw new Error("Failed to submit the form");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
   
 
@@ -137,8 +159,7 @@ function Sketch() {
     <>
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—over three different years: 2010, 2020, and 2022. In 2010, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. By 2020, these scores were 72 for Red, 75 for White, and 68 for Rosé. Finally, by 2022, the scores were 75 for Red, 78 for White, and 70 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
+          <Strong>Scenario: </Strong> This dataset shows website unique visitor counts in the “Computer” and “Social Network” categories. In the Computer group, Apple had 60 visitors, Dell had 20, and HP had 15. In the Social Networks group, Facebook had the most with unique 140 visitors. Twitter had 50, Orkut 45, and LinkedIn had 35 unique visitors.
 
 
         </Text>
@@ -194,8 +215,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       <Flex direction="column" ml="9" maxWidth="1000px" gap="4" justify="center">
         <Text mb="6" size="5" weight="medium">
-          <Strong>Scenario: </Strong> Imagine you are interested in the average quality scores of different wine types—Red, White, and Rosé—across three different countries: Country A, Country B, and Country C. In Country A, the average quality scores were 65 for Red, 70 for White, and 60 for Rosé. In Country B, these scores were 72 for Red, 75 for White, and 68 for Rosé. Finally, in Country C, the scores were 70 for Red, 73 for White, and 65 for Rosé.
-We will ask you to illustrate how you would anticipate this data to be visually communicated to you in a way that is clear, concise, and easy to interpret.
+          <Strong>Scenario: </Strong> This dataset shows the global smartphone market share in 2021 for three major brands (Samsung, Apple, and Vivo). Samsung held the largest portion at about 43%, followed by Apple with 37%. Vivo made up the remaining 20% of the total among this group. These values represent each brand's share of the combined total.
 
         </Text>
       </Flex>
@@ -247,7 +267,7 @@ We will ask you to illustrate how you would anticipate this data to be visually 
 
       
       <Flex align="center" justify="center" mt="6">
-        <Link href="/participantDetails">
+        <Link href="/sketch2">
           <Button size="3" onClick={handleNextButtonClick}>
             Next
           </Button>
