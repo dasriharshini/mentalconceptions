@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react'
-import Link from 'next/link'
 import {Button, TextArea, Flex, Text,RadioGroup} from '@radix-ui/themes';
 import { useRouter } from "next/navigation";
 
@@ -16,16 +15,21 @@ function ParticipantDetails() {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     const prolificId = localStorage.getItem("prolificId");
-    const description1 = localStorage.getItem("description1");
-    const description2 = localStorage.getItem("description2");
-    const paths= localStorage.getItem("paths");
+    const sketches = localStorage.getItem("sketchResponses");
 
-    if (!prolificId || !description1 || !description2 || !gender || !drawingMethod || !skills || !feedback) {
+    if (!prolificId || !sketches || !gender || !drawingMethod || !skills || !feedback) {
       alert("Please fill in all the fields");
       return;
     }
 
-    const data = { prolificId, description1,description2, gender, drawingMethod, skills, feedback, paths: paths ? JSON.parse(paths) : []   };
+    const data = {
+      prolificId,
+      gender,
+      drawingMethod,
+      skills,
+      feedback,
+      sketches: JSON.parse(sketches),
+    };
 
     try {
       const res = await fetch("/api/participant", {
@@ -38,9 +42,12 @@ function ParticipantDetails() {
 
       if (res.ok) {
         localStorage.removeItem("prolificId");
+        localStorage.removeItem("assignedPage");
         localStorage.removeItem("description1");
         localStorage.removeItem("description2");
         localStorage.removeItem("paths");
+        localStorage.removeItem("sketchPromptOrder");
+        localStorage.removeItem("sketchResponses");
         router.push("/thankyou");
       } else {
         throw new Error("Failed to submit the form");
@@ -88,7 +95,7 @@ function ParticipantDetails() {
     <TextArea onChange={(e)=> setFeedback(e.target.value) } 
     value= {feedback} size="3" placeholder="Your Feedback" />
 
-    <Link onClick = {handleSubmit} href="/thankyou"><Button size="3">Submit</Button></Link>
+    <Button size="3" onClick={handleSubmit}>Submit</Button>
     </Flex>
     
 

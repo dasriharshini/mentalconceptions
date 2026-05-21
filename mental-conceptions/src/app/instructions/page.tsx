@@ -33,7 +33,7 @@ function Instructions() {
         ))}
       </Flex>
 
-      <Link href="/sketch">
+      <Link href="/entry">
         <Button size="3" mt="4">Next</Button>
       </Link>
     </Flex>

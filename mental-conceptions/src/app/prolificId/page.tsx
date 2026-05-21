@@ -17,6 +17,12 @@ function ProlificId() {
     }
   
     localStorage.setItem("prolificId", prolificId);
+    localStorage.removeItem("assignedPage");
+    localStorage.removeItem("description1");
+    localStorage.removeItem("description2");
+    localStorage.removeItem("paths");
+    localStorage.removeItem("sketchPromptOrder");
+    localStorage.removeItem("sketchResponses");
     router.push("/instructions");
   
   };

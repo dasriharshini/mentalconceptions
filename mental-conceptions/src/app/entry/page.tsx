@@ -2,28 +2,46 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { SKETCH_PROMPTS } from '../sketch/prompts';
 
-function getRandomPage() {
-  const pages = ['/sketch', '/sketch2', '/sketch3', '/sketch4'];
-  return pages[Math.floor(Math.random() * pages.length)];
+const ORDER_KEY = "sketchPromptOrder";
+
+function createRandomizedOrder() {
+  const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
+
+  for (let index = promptIds.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    const current = promptIds[index];
+    promptIds[index] = promptIds[swapIndex];
+    promptIds[swapIndex] = current;
+  }
+
+  return promptIds;
 }
 
 function Entry() {
   const router = useRouter();
 
   useEffect(() => {
-    const assignedPage = localStorage.getItem('assignedPage');
+    const prolificId = localStorage.getItem("prolificId");
 
-    if (!assignedPage) {
-      const randomPage = getRandomPage();
-      localStorage.setItem('assignedPage', randomPage); // Store the assignment
-      router.push(randomPage); // Redirect to the assigned page
-    } else {
-      router.push(assignedPage); // Redirect to the previously assigned page
+    if (!prolificId) {
+      router.replace("/prolificId");
+      return;
     }
+
+    const savedOrder = localStorage.getItem(ORDER_KEY);
+    const parsedOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
+    const nextOrder =
+      parsedOrder.length === SKETCH_PROMPTS.length
+        ? parsedOrder
+        : createRandomizedOrder();
+
+    localStorage.setItem(ORDER_KEY, JSON.stringify(nextOrder));
+    router.replace("/sketch/1");
   }, [router]);
 
-  return <div>Loading... Please wait while we assign your page.</div>;
+  return <div>Loading... Please wait while we assign your prompts.</div>;
 }
 
 export default Entry;

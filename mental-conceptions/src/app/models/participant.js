@@ -7,12 +7,20 @@ const pointSchema = new Schema({
 
 const canvasPathSchema = new Schema({
   paths: [pointSchema],
-  //paths2: [pointSchema],
   strokeWidth: Number,
   strokeColor: String,
   drawMode: Boolean,
   startTimestamp: Number,
   endTimestamp: Number,
+});
+
+const sketchSchema = new Schema({
+  promptId: String,
+  promptOrder: Number,
+  scenario: String,
+  description: String,
+  imageUrl: String,
+  paths: [canvasPathSchema],
 });
 
 const participantSchema = new Schema(
@@ -25,7 +33,7 @@ const participantSchema = new Schema(
     skills: String,
     feedback: String,
     paths: [canvasPathSchema],
-    //paths2:[canvasPathSchema]
+    sketches: [sketchSchema],
   },
   {
     timestamps: true,
