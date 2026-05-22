@@ -25,6 +25,16 @@ const styles = {
   borderRadius: "0.75rem",
 };
 
+const DEFAULT_STROKE_COLOR = "#000000";
+const STROKE_COLOR_OPTIONS = [
+  "#000000",
+  "#e03131",
+  "#f08c00",
+  "#2b8a3e",
+  "#1971c2",
+  "#6741d9",
+];
+
 type SketchPath = {
   paths: { x: number; y: number }[];
   strokeWidth: number;
@@ -70,6 +80,7 @@ export default function SketchStepPage({
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
   const [description, setDescription] = useState("");
   const [eraseMode, setEraseMode] = useState(false);
+  const [strokeColor, setStrokeColor] = useState(DEFAULT_STROKE_COLOR);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderedPromptIds, setOrderedPromptIds] = useState<string[]>([]);
@@ -300,7 +311,7 @@ export default function SketchStepPage({
               ref={canvasRef}
               style={styles}
               strokeWidth={4}
-              strokeColor="black"
+              strokeColor={strokeColor}
             />
           </Box>
 
@@ -317,6 +328,50 @@ export default function SketchStepPage({
               <ResetIcon />
               Clear Canvas
             </Button>
+          </Flex>
+
+          <Flex direction="column" gap="2">
+            <Text size="3" weight="medium">
+              Pen color
+            </Text>
+            <Flex direction="row" gap="2" align="center" wrap="wrap">
+              {STROKE_COLOR_OPTIONS.map((color) => (
+                <button
+                  key={color}
+                  type="button"
+                  onClick={() => {
+                    setStrokeColor(color);
+                    handlePenClick();
+                  }}
+                  aria-label={`Use ${color} pen color`}
+                  style={{
+                    width: "28px",
+                    height: "28px",
+                    borderRadius: "9999px",
+                    border: strokeColor === color ? "3px solid #111827" : "1px solid #cbd5e1",
+                    backgroundColor: color,
+                    cursor: "pointer",
+                  }}
+                />
+              ))}
+              <input
+                type="color"
+                value={strokeColor}
+                onChange={(event) => {
+                  setStrokeColor(event.target.value);
+                  handlePenClick();
+                }}
+                aria-label="Choose a custom pen color"
+                style={{
+                  width: "40px",
+                  height: "32px",
+                  border: "1px solid #cbd5e1",
+                  borderRadius: "8px",
+                  background: "transparent",
+                  cursor: "pointer",
+                }}
+              />
+            </Flex>
           </Flex>
         </Flex>
 
