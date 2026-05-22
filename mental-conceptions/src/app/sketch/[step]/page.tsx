@@ -167,7 +167,8 @@ export default function SketchStepPage({
     }
 
     const blob = await fetch(dataUrl).then((response) => response.blob());
-    const fileName = `${prolificId}-${Date.now()}-${stepNumber}.png`;
+    const promptSlug = activePrompt?.id ?? `prompt-${stepNumber}`;
+    const fileName = `${prolificId}-${promptSlug}-${Date.now()}-${stepNumber}.png`;
     const s3 = new AWS.S3();
 
     try {
