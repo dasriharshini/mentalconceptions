@@ -17,6 +17,7 @@ import { SKETCH_PROMPTS } from "../prompts";
 
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
+const CURRENT_STEP_KEY = "currentSketchStep";
 const FINAL_SURVEY_URL =
   "https://neu.co1.qualtrics.com/jfe/form/SV_cUV9fSjnq4BQ114";
 
@@ -78,12 +79,14 @@ export default function SketchStepPage({
 }) {
   const router = useRouter();
   const canvasRef = useRef<ReactSketchCanvasRef>(null);
+  const loadedPromptIdRef = useRef<string | null>(null);
   const [description, setDescription] = useState("");
   const [eraseMode, setEraseMode] = useState(false);
   const [strokeColor, setStrokeColor] = useState(DEFAULT_STROKE_COLOR);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderedPromptIds, setOrderedPromptIds] = useState<string[]>([]);
+  const [savedPaths, setSavedPaths] = useState<SketchPath[]>([]);
 
   const stepNumber = Number(params.step);
   const isStepValid =
@@ -99,6 +102,40 @@ export default function SketchStepPage({
     const promptId = orderedPromptIds[stepNumber - 1];
     return SKETCH_PROMPTS.find((prompt) => prompt.id === promptId) ?? null;
   }, [isStepValid, orderedPromptIds, stepNumber]);
+
+  const upsertStoredResponse = (
+    nextDescription: string,
+    nextPaths: SketchPath[],
+    nextImageUrl: string | null = null
+  ) => {
+    if (!activePrompt) {
+      return;
+    }
+
+    const savedResponses = localStorage.getItem(RESPONSES_KEY);
+    const parsedResponses = savedResponses
+      ? (JSON.parse(savedResponses) as StoredSketchResponse[])
+      : [];
+    const existingResponse = parsedResponses.find(
+      (response) => response.promptId === activePrompt.id
+    );
+
+    const nextResponse: StoredSketchResponse = {
+      promptId: activePrompt.id,
+      promptOrder: stepNumber,
+      scenario: activePrompt.scenario,
+      description: nextDescription,
+      paths: nextPaths,
+      imageUrl: nextImageUrl ?? existingResponse?.imageUrl ?? null,
+    };
+
+    const nextResponses = parsedResponses.filter(
+      (response) => response.promptId !== activePrompt.id
+    );
+    nextResponses.push(nextResponse);
+    nextResponses.sort((left, right) => left.promptOrder - right.promptOrder);
+    localStorage.setItem(RESPONSES_KEY, JSON.stringify(nextResponses));
+  };
 
   useEffect(() => {
     AWS.config.update({
@@ -120,6 +157,8 @@ export default function SketchStepPage({
       router.replace("/prolificId");
       return;
     }
+
+    localStorage.setItem(CURRENT_STEP_KEY, stepNumber.toString());
 
     const savedOrder = localStorage.getItem(ORDER_KEY);
     let nextOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
@@ -143,11 +182,32 @@ export default function SketchStepPage({
 
       if (existingResponse) {
         setDescription(existingResponse.description);
+        setSavedPaths(existingResponse.paths);
+      } else {
+        setSavedPaths([]);
       }
     }
 
     setIsLoading(false);
   }, [isStepValid, router, stepNumber]);
+
+  useEffect(() => {
+    if (isLoading || !activePrompt) {
+      return;
+    }
+
+    if (loadedPromptIdRef.current === activePrompt.id) {
+      return;
+    }
+
+    canvasRef.current?.resetCanvas();
+
+    if (savedPaths.length > 0) {
+      canvasRef.current?.loadPaths(savedPaths);
+    }
+
+    loadedPromptIdRef.current = activePrompt.id;
+  }, [activePrompt, isLoading, savedPaths]);
 
   const handleClearCanvasClick = () => {
     canvasRef.current?.clearCanvas();
@@ -162,6 +222,11 @@ export default function SketchStepPage({
   const handlePenClick = () => {
     setEraseMode(false);
     canvasRef.current?.eraseMode(false);
+  };
+
+  const handleCanvasChange = (updatedPaths: SketchPath[]) => {
+    setSavedPaths(updatedPaths);
+    upsertStoredResponse(description, updatedPaths);
   };
 
   const uploadImage = async (prolificId: string) => {
@@ -241,36 +306,23 @@ export default function SketchStepPage({
       }
 
       const imageUrl = await uploadImage(prolificId);
+      upsertStoredResponse(description.trim(), paths, imageUrl);
       const savedResponses = localStorage.getItem(RESPONSES_KEY);
-      const parsedResponses = savedResponses
+      const nextResponses = savedResponses
         ? (JSON.parse(savedResponses) as StoredSketchResponse[])
         : [];
-
-      const nextResponse: StoredSketchResponse = {
-        promptId: activePrompt.id,
-        promptOrder: stepNumber,
-        scenario: activePrompt.scenario,
-        description: description.trim(),
-        paths,
-        imageUrl,
-      };
-
-      const nextResponses = parsedResponses.filter(
-        (response) => response.promptId !== activePrompt.id
-      );
-      nextResponses.push(nextResponse);
-      nextResponses.sort((left, right) => left.promptOrder - right.promptOrder);
-      localStorage.setItem(RESPONSES_KEY, JSON.stringify(nextResponses));
 
       if (stepNumber === SKETCH_PROMPTS.length) {
         await submitParticipantSketches({
           prolificId,
           sketches: nextResponses,
         });
+        localStorage.removeItem(CURRENT_STEP_KEY);
         window.location.assign(FINAL_SURVEY_URL);
         return;
       }
 
+      localStorage.setItem(CURRENT_STEP_KEY, (stepNumber + 1).toString());
       router.push(`/sketch/${stepNumber + 1}`);
     } catch (error) {
       console.error("Error saving sketch response:", error);
@@ -318,6 +370,9 @@ export default function SketchStepPage({
               style={styles}
               strokeWidth={4}
               strokeColor={strokeColor}
+              onChange={(updatedPaths) =>
+                handleCanvasChange(updatedPaths as SketchPath[])
+              }
             />
           </Box>
 
@@ -386,7 +441,11 @@ export default function SketchStepPage({
             Describe your sketch
           </Text>
           <TextArea
-            onChange={(event) => setDescription(event.target.value)}
+            onChange={(event) => {
+              const nextDescription = event.target.value;
+              setDescription(nextDescription);
+              upsertStoredResponse(nextDescription, savedPaths);
+            }}
             value={description}
             size="3"
             resize="vertical"
