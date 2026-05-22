@@ -234,6 +234,12 @@ export default function SketchStepPage({
 
     try {
       const paths = ((await canvasRef.current?.exportPaths()) ?? []) as SketchPath[];
+
+      if (paths.length === 0) {
+        alert("Please draw a sketch before continuing.");
+        return;
+      }
+
       const imageUrl = await uploadImage(prolificId);
       const savedResponses = localStorage.getItem(RESPONSES_KEY);
       const parsedResponses = savedResponses
