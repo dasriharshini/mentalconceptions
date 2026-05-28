@@ -19,7 +19,7 @@ const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const FINAL_SURVEY_URL =
-  "https://neu.co1.qualtrics.com/jfe/form/SV_cUV9fSjnq4BQ114";
+  "https://neu.co1.qualtrics.com/jfe/form/SV_2h7gh4g5S0TxYyi";
 
 const styles = {
   border: "0.25rem solid #3E63DD",
@@ -349,7 +349,7 @@ export default function SketchStepPage({
       </Text>
 
       <Text size="5" weight="medium">
-        <Strong>Scenario: </Strong>
+        <Strong>Dataset: </Strong>
         {activePrompt.scenario}
       </Text>
 
@@ -360,7 +360,7 @@ export default function SketchStepPage({
       >
         <Flex direction="column" gap="3">
           <Text size="5" weight="medium">
-            How would you represent the given information?
+            Draw a representation of this dataset that feels the most intuitive to you:
           </Text>
           <Text size="4">You can sketch in this space.</Text>
 
@@ -438,7 +438,7 @@ export default function SketchStepPage({
 
         <Flex direction="column" minWidth="320px" maxWidth="520px" gap="4" flexGrow="1">
           <Text size="5" weight="medium">
-            Describe your sketch
+            Briefly describe what you drew: 
           </Text>
           <TextArea
             onChange={(event) => {
@@ -449,7 +449,7 @@ export default function SketchStepPage({
             value={description}
             size="3"
             resize="vertical"
-            placeholder="Describe what you drew and why."
+            placeholder="Briefly describe what you drew."
           />
         </Flex>
       </Flex>
