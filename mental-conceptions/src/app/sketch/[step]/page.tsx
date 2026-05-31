@@ -18,8 +18,6 @@ import { SKETCH_PROMPTS } from "../prompts";
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
-const FINAL_SURVEY_URL =
-  "https://neu.co1.qualtrics.com/jfe/form/SV_2h7gh4g5S0TxYyi";
 
 const styles = {
   border: "0.25rem solid #3E63DD",
@@ -310,7 +308,7 @@ export default function SketchStepPage({
           sketches: nextResponses,
         });
         localStorage.removeItem(CURRENT_STEP_KEY);
-        window.location.assign(FINAL_SURVEY_URL);
+        router.push("/qualtricsRedirect");
         return;
       }
 
