@@ -18,6 +18,7 @@ import { SKETCH_PROMPTS } from "../prompts";
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
+const CURRENT_ROUTE_KEY = "currentSketchRoute";
 
 const styles = {
   border: "0.25rem solid #3E63DD",
@@ -40,13 +41,10 @@ type StoredSketchResponse = {
   promptOrder: number;
   scenario: string;
   description: string;
+  intuitiveReason: string;
+  additionalReason: string;
   paths: SketchPath[];
   imageUrl: string | null;
-};
-
-type ParticipantSubmission = {
-  prolificId: string;
-  sketches: StoredSketchResponse[];
 };
 
 function shufflePromptOrder() {
@@ -115,6 +113,8 @@ export default function SketchStepPage({
       promptOrder: stepNumber,
       scenario: activePrompt.scenario,
       description: nextDescription,
+      intuitiveReason: existingResponse?.intuitiveReason ?? "",
+      additionalReason: existingResponse?.additionalReason ?? "",
       paths: nextPaths,
       imageUrl: nextImageUrl ?? existingResponse?.imageUrl ?? null,
     };
@@ -149,6 +149,7 @@ export default function SketchStepPage({
     }
 
     localStorage.setItem(CURRENT_STEP_KEY, stepNumber.toString());
+    localStorage.setItem(CURRENT_ROUTE_KEY, `/sketch/${stepNumber}`);
 
     const savedOrder = localStorage.getItem(ORDER_KEY);
     let nextOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
@@ -174,8 +175,12 @@ export default function SketchStepPage({
         setDescription(existingResponse.description);
         setSavedPaths(existingResponse.paths);
       } else {
+        setDescription("");
         setSavedPaths([]);
       }
+    } else {
+      setDescription("");
+      setSavedPaths([]);
     }
 
     setIsLoading(false);
@@ -255,20 +260,6 @@ export default function SketchStepPage({
     }
   };
 
-  const submitParticipantSketches = async (payload: ParticipantSubmission) => {
-    const response = await fetch("/api/participant", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to save sketches");
-    }
-  };
-
   const handleNext = async () => {
     if (!activePrompt) {
       return;
@@ -297,23 +288,8 @@ export default function SketchStepPage({
 
       const imageUrl = await uploadImage(prolificId);
       upsertStoredResponse(description.trim(), paths, imageUrl);
-      const savedResponses = localStorage.getItem(RESPONSES_KEY);
-      const nextResponses = savedResponses
-        ? (JSON.parse(savedResponses) as StoredSketchResponse[])
-        : [];
-
-      if (stepNumber === SKETCH_PROMPTS.length) {
-        await submitParticipantSketches({
-          prolificId,
-          sketches: nextResponses,
-        });
-        localStorage.removeItem(CURRENT_STEP_KEY);
-        router.push("/qualtricsRedirect");
-        return;
-      }
-
-      localStorage.setItem(CURRENT_STEP_KEY, (stepNumber + 1).toString());
-      router.push(`/sketch/${stepNumber + 1}`);
+      localStorage.setItem(CURRENT_ROUTE_KEY, `/sketch/${stepNumber}/reasons`);
+      router.push(`/sketch/${stepNumber}/reasons`);
     } catch (error) {
       console.error("Error saving sketch response:", error);
       alert(
@@ -427,11 +403,7 @@ export default function SketchStepPage({
 
       <Flex align="center" justify="center" mt="4" mb="8">
         <Button size="3" onClick={handleNext} disabled={isSubmitting}>
-          {isSubmitting
-            ? "Saving..."
-            : stepNumber === SKETCH_PROMPTS.length
-              ? "Continue to Survey"
-              : "Next"}
+          {isSubmitting ? "Saving..." : "Next"}
         </Button>
       </Flex>
     </Flex>

@@ -19,6 +19,8 @@ const sketchSchema = new Schema({
   promptOrder: Number,
   scenario: String,
   description: String,
+  intuitiveReason: String,
+  additionalReason: String,
   imageUrl: String,
   paths: [canvasPathSchema],
 });

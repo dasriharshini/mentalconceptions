@@ -24,6 +24,7 @@ function ProlificId() {
     localStorage.removeItem("sketchPromptOrder");
     localStorage.removeItem("sketchResponses");
     localStorage.removeItem("currentSketchStep");
+    localStorage.removeItem("currentSketchRoute");
     router.push("/instructions");
   
   };

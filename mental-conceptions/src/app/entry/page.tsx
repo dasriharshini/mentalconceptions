@@ -6,6 +6,7 @@ import { SKETCH_PROMPTS } from '../sketch/prompts';
 
 const ORDER_KEY = "sketchPromptOrder";
 const CURRENT_STEP_KEY = "currentSketchStep";
+const CURRENT_ROUTE_KEY = "currentSketchRoute";
 
 function createRandomizedOrder() {
   const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
@@ -44,9 +45,15 @@ function Entry() {
       savedStep <= SKETCH_PROMPTS.length
         ? savedStep
         : 1;
+    const savedRoute = localStorage.getItem(CURRENT_ROUTE_KEY);
+    const nextRoute =
+      savedRoute &&
+      /^\/sketch\/\d+(\/reasons)?$/.test(savedRoute)
+        ? savedRoute
+        : `/sketch/${nextStep}`;
 
     localStorage.setItem(ORDER_KEY, JSON.stringify(nextOrder));
-    router.replace(`/sketch/${nextStep}`);
+    router.replace(nextRoute);
   }, [router]);
 
   return <div>Loading... Please wait while we assign your prompts.</div>;
