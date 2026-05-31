@@ -27,14 +27,6 @@ const styles = {
 };
 
 const DEFAULT_STROKE_COLOR = "#000000";
-const STROKE_COLOR_OPTIONS = [
-  "#000000",
-  "#e03131",
-  "#f08c00",
-  "#2b8a3e",
-  "#1971c2",
-  "#6741d9",
-];
 
 type SketchPath = {
   paths: { x: number; y: number }[];
@@ -393,28 +385,9 @@ export default function SketchStepPage({
 
           <Flex direction="column" gap="2">
             <Text size="3" weight="medium">
-              Pen color
+              Pick pen color:
             </Text>
             <Flex direction="row" gap="2" align="center" wrap="wrap">
-              {STROKE_COLOR_OPTIONS.map((color) => (
-                <button
-                  key={color}
-                  type="button"
-                  onClick={() => {
-                    setStrokeColor(color);
-                    handlePenClick();
-                  }}
-                  aria-label={`Use ${color} pen color`}
-                  style={{
-                    width: "28px",
-                    height: "28px",
-                    borderRadius: "9999px",
-                    border: strokeColor === color ? "3px solid #111827" : "1px solid #cbd5e1",
-                    backgroundColor: color,
-                    cursor: "pointer",
-                  }}
-                />
-              ))}
               <input
                 type="color"
                 value={strokeColor}
