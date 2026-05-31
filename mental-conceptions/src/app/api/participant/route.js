@@ -11,7 +11,6 @@ export async function POST(request) {
     drawingMethod,
     skills,
     feedback,
-    paths,
     sketches,
   } = await request.json();
   console.log("Request Body:", {
@@ -22,7 +21,6 @@ export async function POST(request) {
     drawingMethod,
     skills,
     feedback,
-    paths,
     sketches,
   });
 
@@ -35,7 +33,6 @@ export async function POST(request) {
     drawingMethod,
     skills,
     feedback,
-    paths,
     sketches,
   });
 
@@ -48,7 +45,6 @@ export async function POST(request) {
       drawingMethod,
       skills,
       feedback,
-      paths,
       sketches,
     });
     console.log("Created participant:", participant);

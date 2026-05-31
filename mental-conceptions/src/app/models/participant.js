@@ -34,7 +34,6 @@ const participantSchema = new Schema(
     drawingMethod: String,
     skills: String,
     feedback: String,
-    paths: [canvasPathSchema],
     sketches: [sketchSchema],
   },
   {
