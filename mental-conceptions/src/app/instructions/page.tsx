@@ -50,12 +50,12 @@ export default function Instructions() {
     router.push(nextRoute);
   };
 
-  const captions = [<>This drawing <Strong>isn’t recognizable</Strong>.</>, 
-    <>This drawing is recognizable, but it <Strong>doesn’t allow someone to understand the data</Strong><br /> (i.e., how many units of apples and grapes were sold).</>];
+  const captions = [<>This drawing <Strong>isn’t recognizable</Strong>.</>,
+  <>This drawing is recognizable, but it <Strong>doesn’t allow someone to understand the data</Strong> (i.e., how many units of apples and grapes were sold).</>];
   const imageNames = ["not_recognizable", "no_data"];
 
   return (
-    <Flex direction="column" ml="9" maxWidth="1100px" gap="6">
+    <Flex direction="column" ml="9" maxWidth="1000px" gap="6">
       <Text mt="7" size="5" weight="medium">
         <Strong>Instructions: </Strong> In this study, you will be making
         drawings of your impressions about different datasets. Your goal is to
@@ -64,21 +64,28 @@ export default function Instructions() {
         <br />
         <br />
         There are no right or wrong ways to draw the datasets, as long as the drawings
-         are <Strong>recognizable</Strong>
+        are <Strong>recognizable</Strong>
         {" "}to someone else trying to identify what you drew. You should make
-        sure someone else looking only at your drawing would be able to
+        sure someone looking only at your drawing would be able to
         <Strong> understand what data you were prompted with</Strong>. But you don't need to
         worry about making the drawings pretty.
         <br />
         <br />
         Here are two examples of what we <Strong>DON’T</Strong> want you to draw:
-        <br />
-        <br />
-        <Strong>Example dataset: </Strong>This dataset shows the sales of apples 
-        and grapes in a supermarket. 200 units of apples and 150 units of grapes 
-        were sold. 
 
-         <Flex justify="center" gap="6" mt="4">
+      </Text>
+
+      <Flex justify="center" gap="6" p="6" style={{
+        backgroundColor: '#f8f9fa',
+        border: '1px solid #e9ecef',
+        borderRadius: '12px'
+      }}>
+        <Text size="4" style={{ maxWidth: '200px' }}>
+          <Strong>Example dataset: </Strong>This dataset shows the sales of apples
+          and grapes in a supermarket. 200 units of apples and 150 units of grapes
+          were sold.
+        </Text>
+
         {imageNames.map((image, index) => (
           <Flex key={index} direction="column" align="start" gap="2">
             <Box style={{ textAlign: 'left' }}>
@@ -95,13 +102,12 @@ export default function Instructions() {
         ))}
       </Flex>
 
-        <br />
-
+      <Text size="5" weight="medium">
         Click the &quot;Next&quot; button below when you&apos;re ready to start
         the study.
       </Text>
 
-     
+
 
       <Button size="3" onClick={handleNext} style={{ width: "fit-content" }}>
         Next
