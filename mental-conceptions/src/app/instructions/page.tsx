@@ -67,7 +67,7 @@ export default function Instructions() {
         are <Strong>recognizable</Strong>
         {" "}to someone else trying to identify what you drew. You should make
         sure someone looking only at your drawing would be able to
-        <Strong> understand what data you were prompted with</Strong>. But you don't need to
+        <Strong> understand what data you were prompted with</Strong>. You don't need to
         worry about making the drawings pretty.
         <br />
         <br />
