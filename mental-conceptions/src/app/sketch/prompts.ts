@@ -32,7 +32,7 @@ export const SKETCH_PROMPTS: SketchPrompt[] = [
   {
     id: "metro-systems",
     scenario:
-      "This dataset shows the number of stations, total track length, and annual ridership for metro systems in three cities. Tokyo has 330 stations, 250 km of track, and 3.5 billion ridership. Paris has 300 stations, 310 km of track, with 2.1 billion riders. ", 
+      "This dataset shows the number of stations, total track length, and annual ridership for metro systems in two cities. Tokyo has 330 stations, 250 km of track, and 3.5 billion ridership. Paris has 300 stations, 310 km of track, with 2.1 billion riders. ", 
   },
   {
     id: "baby-names",
