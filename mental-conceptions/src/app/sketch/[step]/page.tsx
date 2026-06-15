@@ -396,7 +396,7 @@ export default function SketchStepPage({
             value={description}
             size="3"
             resize="vertical"
-            placeholder="Briefly describe what you drew."
+            placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
           />
         </Flex>
       </Flex>

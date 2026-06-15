@@ -271,7 +271,7 @@ export default function SketchReasonsPage({
         value={intuitiveReason}
         size="3"
         resize="vertical"
-        placeholder="Explain why this drawing feels intuitive to you."
+        placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
       />
 
       <Text size="5" weight="medium">
@@ -291,7 +291,7 @@ export default function SketchReasonsPage({
         value={additionalReason}
         size="3"
         resize="vertical"
-        placeholder="Explain any other reasons, or write NA."
+        placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
       />
 
       <Flex align="center" justify="center" mt="4" mb="8">
