@@ -13,7 +13,10 @@ import {
   ReactSketchCanvas,
   type ReactSketchCanvasRef,
 } from "react-sketch-canvas";
-import { SKETCH_PROMPTS } from "../prompts";
+import { getSketchPrompts } from "../prompts";
+
+let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
+const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
 
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";

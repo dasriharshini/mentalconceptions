@@ -3,12 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Flex, Strong, Text, TextArea } from "@radix-ui/themes";
-import { SKETCH_PROMPTS } from "../../prompts";
+import { getSketchPrompts } from "../../prompts";
 
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
+
+let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
+const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
 
 type SketchPath = {
   paths: { x: number; y: number }[];
