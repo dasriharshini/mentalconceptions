@@ -60,48 +60,23 @@ export default function Instructions() {
         <Strong>Instructions: </Strong> In this study, you will be making
         drawings of your impressions about different datasets. Your goal is to
         draw a representation of the data you&apos;re prompted with in a way
-        that feels the <Strong>most intuitive</Strong> to you.
+        that <Strong>feels the most intuitive to you</Strong>.
         <br />
         <br />
-        There are no right or wrong ways to draw the datasets, as long as the drawings
-        are <Strong>recognizable</Strong>
-        {" "}to someone else trying to identify what you drew. You should make
-        sure someone looking only at your drawing would be able to
-        <Strong> understand what data you were prompted with</Strong>. You don't need to
-        worry about making the drawings pretty.
+        There are no right or wrong ways to draw the datasets, as long as someone else would 
+        be able to <Strong>recognize</Strong> your drawings and <Strong>understand what dataset 
+        you were prompted with. </Strong>You don’t need to worry about making the drawings pretty. 
+
         <br />
         <br />
-        Here are two examples of what we <Strong>DON’T</Strong> want you to draw:
+        Because we are interested in your unique personal perspective, <Strong>please 
+          do not use AI tools in any part of this study. </Strong>
+        AI-generated answers cannot capture your individual voice, and they unfortunately 
+        make the data unusable for our research goals. Thank you for sharing your genuine thoughts with us! 
 
       </Text>
 
-      <Flex justify="center" gap="6" p="6" style={{
-        backgroundColor: '#f8f9fa',
-        border: '1px solid #e9ecef',
-        borderRadius: '12px'
-      }}>
-        <Text size="4" style={{ maxWidth: '200px' }}>
-          <Strong>Example dataset: </Strong>This dataset shows the sales of apples
-          and grapes in a supermarket. 200 units of apples and 150 units of grapes
-          were sold.
-        </Text>
-
-        {imageNames.map((image, index) => (
-          <Flex key={index} direction="column" align="start" gap="2">
-            <Box style={{ textAlign: 'left' }}>
-              <Image
-                src={`/images/${image}.png`}
-                alt={`Example ${index + 1}`}
-                width={200}
-                height={200}
-                style={{ borderRadius: '8px' }}
-              />
-            </Box>
-            <Text size="4" style={{ textAlign: 'left' }}>{captions[index]}</Text>
-          </Flex>
-        ))}
-      </Flex>
-
+     
       <Text size="5" weight="medium">
         Click the &quot;Next&quot; button below when you&apos;re ready to start
         the study.

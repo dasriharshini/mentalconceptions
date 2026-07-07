@@ -8,7 +8,8 @@ function Home() {
     <div>
     <Flex direction="column" align="center" justify="center" style={{ height: '100vh' }}>
       <Heading mb="4" size="9">Mental Conceptions of Data Science</Heading>
-      <Text mb="8" size ="8">By Professor Lace Padilla</Text>
+      <br />
+      <br />
       <Link href="/prolificId"><Button size="4">Begin Survey</Button></Link>
     </Flex>
 
