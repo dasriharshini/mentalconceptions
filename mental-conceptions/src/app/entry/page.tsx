@@ -2,11 +2,14 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { SKETCH_PROMPTS } from '../sketch/prompts';
+import { getSketchPrompts } from '../sketch/prompts';
 
 const ORDER_KEY = "sketchPromptOrder";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
+
+let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
+const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
 
 function createRandomizedOrder() {
   const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
