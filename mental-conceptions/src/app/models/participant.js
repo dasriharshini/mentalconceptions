@@ -21,7 +21,6 @@ const sketchSchema = new Schema({
   scenario: String,
   description: String,
   intuitiveReason: String,
-  additionalReason: String,
   imageUrl: String,
   paths: [canvasPathSchema],
 });
@@ -34,6 +33,7 @@ const participantSchema = new Schema(
     conditionSequence: [String],
     description1: String,
     description2: String,
+    finalAdditionalReason: String,
     gender: String,
     drawingMethod: String,
     skills: String,

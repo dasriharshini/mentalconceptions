@@ -39,6 +39,7 @@ function ProlificId() {
     localStorage.removeItem("sketchResponses");
     localStorage.removeItem("currentSketchStep");
     localStorage.removeItem("currentSketchRoute");
+    localStorage.removeItem("finalAdditionalReason");
     localStorage.removeItem(PARTICIPANT_NUMBER_KEY);
     localStorage.removeItem(STUDY_VERSION_KEY);
 

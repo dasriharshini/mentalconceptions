@@ -48,7 +48,6 @@ type StoredSketchResponse = {
   scenario: string;
   description: string;
   intuitiveReason: string;
-  additionalReason: string;
   paths: SketchPath[];
   imageUrl: string | null;
 };
@@ -122,7 +121,6 @@ export default function SketchStepPage({
       scenario: activePrompt.scenario,
       description: nextDescription,
       intuitiveReason: existingResponse?.intuitiveReason ?? "",
-      additionalReason: existingResponse?.additionalReason ?? "",
       paths: nextPaths,
       imageUrl: nextImageUrl ?? existingResponse?.imageUrl ?? null,
     };

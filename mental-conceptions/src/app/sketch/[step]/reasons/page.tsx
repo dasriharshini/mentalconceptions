@@ -31,17 +31,8 @@ type StoredSketchResponse = {
   scenario: string;
   description: string;
   intuitiveReason: string;
-  additionalReason: string;
   paths: SketchPath[];
   imageUrl: string | null;
-};
-
-type ParticipantSubmission = {
-  prolificId: string;
-  studyVersion: string;
-  participantNumber: number;
-  conditionSequence: string[];
-  sketches: StoredSketchResponse[];
 };
 
 function shufflePromptOrder(prompts: SketchPrompt[]) {
@@ -69,7 +60,6 @@ export default function SketchReasonsPage({
   const [orderedPromptIds, setOrderedPromptIds] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [intuitiveReason, setIntuitiveReason] = useState("");
-  const [additionalReason, setAdditionalReason] = useState("");
 
   const stepNumber = Number(params.step);
   const isStepValid =
@@ -88,8 +78,7 @@ export default function SketchReasonsPage({
 
   const upsertStoredResponse = (
     nextDescription: string,
-    nextIntuitiveReason: string,
-    nextAdditionalReason: string
+    nextIntuitiveReason: string
   ) => {
     if (!activePrompt) {
       return;
@@ -111,7 +100,6 @@ export default function SketchReasonsPage({
       ...existingResponse,
       description: nextDescription,
       intuitiveReason: nextIntuitiveReason,
-      additionalReason: nextAdditionalReason,
     };
 
     const nextResponses = parsedResponses.filter(
@@ -122,30 +110,9 @@ export default function SketchReasonsPage({
     localStorage.setItem(RESPONSES_KEY, JSON.stringify(nextResponses));
   };
 
-  const submitParticipantSketches = async (payload: ParticipantSubmission) => {
-    const response = await fetch("/api/participant", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to save sketches");
-    }
-  };
-
   useEffect(() => {
     if (!isStepValid) {
       router.replace("/entry");
-      return;
-    }
-
-    const prolificId = localStorage.getItem("prolificId");
-
-    if (!prolificId) {
-      router.replace("/prolificId");
       return;
     }
 
@@ -191,7 +158,6 @@ export default function SketchReasonsPage({
 
     setDescription(existingResponse.description ?? "");
     setIntuitiveReason(existingResponse.intuitiveReason ?? "");
-    setAdditionalReason(existingResponse.additionalReason ?? "");
     setIsLoading(false);
   }, [isStepValid, router, stepNumber]);
 
@@ -210,48 +176,15 @@ export default function SketchReasonsPage({
       return;
     }
 
-    if (!additionalReason.trim()) {
-      alert("Please answer the question about other reasons, or write NA.");
-      return;
-    }
-
-    const prolificId = localStorage.getItem("prolificId");
-    if (!prolificId) {
-      router.replace("/prolificId");
-      return;
-    }
-
-    const studyVersion = localStorage.getItem("studyVersion") ?? "balanced-condition-v1";
-    const participantNumber = Number(
-      localStorage.getItem("studyParticipantNumber") ?? "0"
-    );
-    const conditionSequence = sketchPrompts.map((prompt) => prompt.condition);
-
     setIsSubmitting(true);
 
     try {
-      upsertStoredResponse(
-        description.trim(),
-        intuitiveReason.trim(),
-        additionalReason.trim()
-      );
-
-      const savedResponses = localStorage.getItem(RESPONSES_KEY);
-      const nextResponses = savedResponses
-        ? (JSON.parse(savedResponses) as StoredSketchResponse[])
-        : [];
+      upsertStoredResponse(description.trim(), intuitiveReason.trim());
 
       if (stepNumber === TASK_COUNT) {
-        await submitParticipantSketches({
-          prolificId,
-          studyVersion,
-          participantNumber,
-          conditionSequence,
-          sketches: nextResponses,
-        });
-        localStorage.removeItem(CURRENT_STEP_KEY);
-        localStorage.removeItem(CURRENT_ROUTE_KEY);
-        router.push("/qualtricsRedirect");
+        localStorage.setItem(CURRENT_STEP_KEY, (stepNumber + 1).toString());
+        localStorage.setItem(CURRENT_ROUTE_KEY, "/sketch/final-reason");
+        router.push("/sketch/final-reason");
         return;
       }
 
@@ -294,11 +227,7 @@ export default function SketchReasonsPage({
         onChange={(event) => {
           const nextIntuitiveReason = event.target.value;
           setIntuitiveReason(nextIntuitiveReason);
-          upsertStoredResponse(
-            description,
-            nextIntuitiveReason,
-            additionalReason
-          );
+          upsertStoredResponse(description, nextIntuitiveReason);
         }}
         value={intuitiveReason}
         size="3"
@@ -306,34 +235,14 @@ export default function SketchReasonsPage({
         placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
       />
 
-      <Text size="5" weight="medium">
-        Apart from intuitiveness, are there other reasons why you chose to draw
-        the dataset this way? If so, explain here. If not, write NA.
-      </Text>
-      <TextArea
-        onChange={(event) => {
-          const nextAdditionalReason = event.target.value;
-          setAdditionalReason(nextAdditionalReason);
-          upsertStoredResponse(
-            description,
-            intuitiveReason,
-            nextAdditionalReason
-          );
-        }}
-        value={additionalReason}
-        size="3"
-        resize="vertical"
-        placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
-      />
-
       <Flex align="center" justify="center" mt="4" mb="8">
-      <Button size="3" onClick={handleNext} disabled={isSubmitting}>
-        {isSubmitting
-          ? "Saving..."
+        <Button size="3" onClick={handleNext} disabled={isSubmitting}>
+          {isSubmitting
+            ? "Saving..."
             : stepNumber === TASK_COUNT
-              ? "Continue to Survey"
+              ? "Continue to Final Question"
               : "Next"}
-      </Button>
+        </Button>
       </Flex>
     </Flex>
   );

@@ -71,7 +71,8 @@ function Entry() {
     const savedRoute = localStorage.getItem(CURRENT_ROUTE_KEY);
     const nextRoute =
       savedRoute &&
-      /^\/sketch\/\d+(\/reasons)?$/.test(savedRoute)
+      (/^\/sketch\/\d+(\/reasons)?$/.test(savedRoute) ||
+        savedRoute === "/sketch/final-reason")
         ? savedRoute
         : `/sketch/${nextStep}`;
 
