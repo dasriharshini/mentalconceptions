@@ -13,15 +13,17 @@ import {
   ReactSketchCanvas,
   type ReactSketchCanvasRef,
 } from "react-sketch-canvas";
-import { getSketchPrompts } from "../prompts";
-
-let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
-const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
+import {
+  getSketchPromptsForParticipant,
+  SketchPrompt,
+  TASK_COUNT,
+} from "../prompts";
 
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
+const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
 
 const styles = {
   border: "0.25rem solid #3E63DD",
@@ -42,6 +44,7 @@ type SketchPath = {
 type StoredSketchResponse = {
   promptId: string;
   promptOrder: number;
+  condition: string;
   scenario: string;
   description: string;
   intuitiveReason: string;
@@ -50,8 +53,8 @@ type StoredSketchResponse = {
   imageUrl: string | null;
 };
 
-function shufflePromptOrder() {
-  const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
+function shufflePromptOrder(prompts: SketchPrompt[]) {
+  const promptIds = prompts.map((prompt) => prompt.id);
 
   for (let index = promptIds.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
@@ -76,6 +79,7 @@ export default function SketchStepPage({
   const [strokeColor, setStrokeColor] = useState(DEFAULT_STROKE_COLOR);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sketchPrompts, setSketchPrompts] = useState<SketchPrompt[]>([]);
   const [orderedPromptIds, setOrderedPromptIds] = useState<string[]>([]);
   const [savedPaths, setSavedPaths] = useState<SketchPath[]>([]);
 
@@ -83,16 +87,16 @@ export default function SketchStepPage({
   const isStepValid =
     Number.isInteger(stepNumber) &&
     stepNumber >= 1 &&
-    stepNumber <= SKETCH_PROMPTS.length;
+    stepNumber <= TASK_COUNT;
 
   const activePrompt = useMemo(() => {
-    if (!isStepValid || orderedPromptIds.length !== SKETCH_PROMPTS.length) {
+    if (!isStepValid || orderedPromptIds.length !== TASK_COUNT) {
       return null;
     }
 
     const promptId = orderedPromptIds[stepNumber - 1];
-    return SKETCH_PROMPTS.find((prompt) => prompt.id === promptId) ?? null;
-  }, [isStepValid, orderedPromptIds, stepNumber]);
+    return sketchPrompts.find((prompt) => prompt.id === promptId) ?? null;
+  }, [isStepValid, orderedPromptIds, sketchPrompts, stepNumber]);
 
   const upsertStoredResponse = (
     nextDescription: string,
@@ -114,6 +118,7 @@ export default function SketchStepPage({
     const nextResponse: StoredSketchResponse = {
       promptId: activePrompt.id,
       promptOrder: stepNumber,
+      condition: activePrompt.condition,
       scenario: activePrompt.scenario,
       description: nextDescription,
       intuitiveReason: existingResponse?.intuitiveReason ?? "",
@@ -151,14 +156,26 @@ export default function SketchStepPage({
       return;
     }
 
+    const participantNumber = Number(
+      localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
+    );
+
+    if (!Number.isInteger(participantNumber) || participantNumber < 1) {
+      router.replace("/prolificId");
+      return;
+    }
+
+    const nextSketchPrompts = getSketchPromptsForParticipant(participantNumber);
+    setSketchPrompts(nextSketchPrompts);
+
     localStorage.setItem(CURRENT_STEP_KEY, stepNumber.toString());
     localStorage.setItem(CURRENT_ROUTE_KEY, `/sketch/${stepNumber}`);
 
     const savedOrder = localStorage.getItem(ORDER_KEY);
     let nextOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
 
-    if (nextOrder.length !== SKETCH_PROMPTS.length) {
-      nextOrder = shufflePromptOrder();
+    if (nextOrder.length !== TASK_COUNT) {
+      nextOrder = shufflePromptOrder(nextSketchPrompts);
       localStorage.setItem(ORDER_KEY, JSON.stringify(nextOrder));
     }
 
@@ -242,7 +259,9 @@ export default function SketchStepPage({
 
     const blob = await fetch(dataUrl).then((response) => response.blob());
     const promptSlug = activePrompt?.id ?? `prompt-${stepNumber}`;
-    const fileName = `${prolificId}-${promptSlug}-${Date.now()}-${stepNumber}.png`;
+    const condition = activePrompt?.condition ?? "X";
+    const taskLabel = `task-${stepNumber}`;
+    const fileName = `${prolificId}-${taskLabel}-${condition}-${promptSlug}-${Date.now()}.png`;
     const s3 = new AWS.S3();
 
     try {
@@ -314,7 +333,7 @@ export default function SketchStepPage({
   return (
     <Flex direction="column" ml="9" mr="9" maxWidth="1200px" gap="6">
       <Text mt="9" size="4" weight="medium">
-        Prompt {stepNumber} of {SKETCH_PROMPTS.length}
+        Prompt {stepNumber} of {TASK_COUNT}
       </Text>
 
       <Text size="5" weight="medium">

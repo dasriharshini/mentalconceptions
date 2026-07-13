@@ -17,6 +17,7 @@ const canvasPathSchema = new Schema({
 const sketchSchema = new Schema({
   promptId: String,
   promptOrder: Number,
+  condition: String,
   scenario: String,
   description: String,
   intuitiveReason: String,
@@ -28,6 +29,9 @@ const sketchSchema = new Schema({
 const participantSchema = new Schema(
   {
     prolificId: String,
+    studyVersion: String,
+    participantNumber: Number,
+    conditionSequence: [String],
     description1: String,
     description2: String,
     gender: String,

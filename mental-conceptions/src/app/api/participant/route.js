@@ -5,6 +5,9 @@ import { NextResponse } from "next/server";
 export async function POST(request) {
   const {
     prolificId,
+    studyVersion,
+    participantNumber,
+    conditionSequence,
     description1,
     description2,
     gender,
@@ -15,6 +18,9 @@ export async function POST(request) {
   } = await request.json();
   console.log("Request Body:", {
     prolificId,
+    studyVersion,
+    participantNumber,
+    conditionSequence,
     description1,
     description2,
     gender,
@@ -27,6 +33,9 @@ export async function POST(request) {
   await connectMongoDB();
   console.log("Creating participant with:", {
     prolificId,
+    studyVersion,
+    participantNumber,
+    conditionSequence,
     description1,
     description2,
     gender,
@@ -39,6 +48,9 @@ export async function POST(request) {
   try {
     const participant = await Participant.create({
       prolificId,
+      studyVersion,
+      participantNumber,
+      conditionSequence,
       description1,
       description2,
       gender,

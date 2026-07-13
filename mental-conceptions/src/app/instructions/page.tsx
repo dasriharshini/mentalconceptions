@@ -2,18 +2,29 @@
 
 import { Button, Flex, Strong, Text, Box } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import { getSketchPrompts } from "../sketch/prompts";
 import Image from 'next/image';
+import {
+  getSketchPromptsForParticipant,
+  TASK_COUNT,
+} from "../sketch/prompts";
 
 const ORDER_KEY = "sketchPromptOrder";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
-
-let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
-const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
+const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
 
 function createRandomizedOrder() {
-  const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
+  const participantNumber = Number(
+    localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
+  );
+
+  if (!Number.isInteger(participantNumber) || participantNumber < 1) {
+    return [];
+  }
+
+  const promptIds = getSketchPromptsForParticipant(participantNumber).map(
+    (prompt) => prompt.id
+  );
 
   for (let index = promptIds.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
@@ -29,23 +40,32 @@ export default function Instructions() {
   const router = useRouter();
 
   const handleNext = () => {
+    const participantNumber = Number(
+      localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
+    );
+
+    if (!Number.isInteger(participantNumber) || participantNumber < 1) {
+      router.replace("/prolificId");
+      return;
+    }
+
     const savedOrder = localStorage.getItem(ORDER_KEY);
     const parsedOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
     const nextOrder =
-      parsedOrder.length === SKETCH_PROMPTS.length
+      parsedOrder.length === TASK_COUNT
         ? parsedOrder
         : createRandomizedOrder();
     const savedStep = Number(localStorage.getItem(CURRENT_STEP_KEY) ?? "1");
     const nextStep =
       Number.isInteger(savedStep) &&
-        savedStep >= 1 &&
-        savedStep <= SKETCH_PROMPTS.length
+      savedStep >= 1 &&
+      savedStep <= TASK_COUNT
         ? savedStep
         : 1;
     const savedRoute = localStorage.getItem(CURRENT_ROUTE_KEY);
     const nextRoute =
       savedRoute &&
-        /^\/sketch\/\d+(\/reasons)?$/.test(savedRoute)
+      /^\/sketch\/\d+(\/reasons)?$/.test(savedRoute)
         ? savedRoute
         : `/sketch/${nextStep}`;
 

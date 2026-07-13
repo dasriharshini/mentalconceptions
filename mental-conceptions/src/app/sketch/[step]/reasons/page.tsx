@@ -3,15 +3,17 @@
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button, Flex, Strong, Text, TextArea } from "@radix-ui/themes";
-import { getSketchPrompts } from "../../prompts";
+import {
+  getSketchPromptsForParticipant,
+  SketchPrompt,
+  TASK_COUNT,
+} from "../../prompts";
 
 const ORDER_KEY = "sketchPromptOrder";
 const RESPONSES_KEY = "sketchResponses";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
-
-let useDatasetB = true; // set to true to use Dataset B, false to use Dataset A
-const SKETCH_PROMPTS = getSketchPrompts(useDatasetB);
+const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
 
 type SketchPath = {
   paths: { x: number; y: number }[];
@@ -25,6 +27,7 @@ type SketchPath = {
 type StoredSketchResponse = {
   promptId: string;
   promptOrder: number;
+  condition: string;
   scenario: string;
   description: string;
   intuitiveReason: string;
@@ -35,11 +38,14 @@ type StoredSketchResponse = {
 
 type ParticipantSubmission = {
   prolificId: string;
+  studyVersion: string;
+  participantNumber: number;
+  conditionSequence: string[];
   sketches: StoredSketchResponse[];
 };
 
-function shufflePromptOrder() {
-  const promptIds = SKETCH_PROMPTS.map((prompt) => prompt.id);
+function shufflePromptOrder(prompts: SketchPrompt[]) {
+  const promptIds = prompts.map((prompt) => prompt.id);
 
   for (let index = promptIds.length - 1; index > 0; index -= 1) {
     const swapIndex = Math.floor(Math.random() * (index + 1));
@@ -59,6 +65,7 @@ export default function SketchReasonsPage({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [sketchPrompts, setSketchPrompts] = useState<SketchPrompt[]>([]);
   const [orderedPromptIds, setOrderedPromptIds] = useState<string[]>([]);
   const [description, setDescription] = useState("");
   const [intuitiveReason, setIntuitiveReason] = useState("");
@@ -68,16 +75,16 @@ export default function SketchReasonsPage({
   const isStepValid =
     Number.isInteger(stepNumber) &&
     stepNumber >= 1 &&
-    stepNumber <= SKETCH_PROMPTS.length;
+    stepNumber <= TASK_COUNT;
 
   const activePrompt = useMemo(() => {
-    if (!isStepValid || orderedPromptIds.length !== SKETCH_PROMPTS.length) {
+    if (!isStepValid || orderedPromptIds.length !== TASK_COUNT) {
       return null;
     }
 
     const promptId = orderedPromptIds[stepNumber - 1];
-    return SKETCH_PROMPTS.find((prompt) => prompt.id === promptId) ?? null;
-  }, [isStepValid, orderedPromptIds, stepNumber]);
+    return sketchPrompts.find((prompt) => prompt.id === promptId) ?? null;
+  }, [isStepValid, orderedPromptIds, sketchPrompts, stepNumber]);
 
   const upsertStoredResponse = (
     nextDescription: string,
@@ -142,14 +149,27 @@ export default function SketchReasonsPage({
       return;
     }
 
+    const participantNumber = Number(
+      localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
+    );
+
+    if (!Number.isInteger(participantNumber) || participantNumber < 1) {
+      router.replace("/prolificId");
+      return;
+    }
+
+    const nextSketchPrompts =
+      getSketchPromptsForParticipant(participantNumber);
+    setSketchPrompts(nextSketchPrompts);
+
     localStorage.setItem(CURRENT_STEP_KEY, stepNumber.toString());
     localStorage.setItem(CURRENT_ROUTE_KEY, `/sketch/${stepNumber}/reasons`);
 
     const savedOrder = localStorage.getItem(ORDER_KEY);
     let nextOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
 
-    if (nextOrder.length !== SKETCH_PROMPTS.length) {
-      nextOrder = shufflePromptOrder();
+    if (nextOrder.length !== TASK_COUNT) {
+      nextOrder = shufflePromptOrder(nextSketchPrompts);
       localStorage.setItem(ORDER_KEY, JSON.stringify(nextOrder));
     }
 
@@ -201,6 +221,12 @@ export default function SketchReasonsPage({
       return;
     }
 
+    const studyVersion = localStorage.getItem("studyVersion") ?? "balanced-condition-v1";
+    const participantNumber = Number(
+      localStorage.getItem("studyParticipantNumber") ?? "0"
+    );
+    const conditionSequence = sketchPrompts.map((prompt) => prompt.condition);
+
     setIsSubmitting(true);
 
     try {
@@ -215,9 +241,12 @@ export default function SketchReasonsPage({
         ? (JSON.parse(savedResponses) as StoredSketchResponse[])
         : [];
 
-      if (stepNumber === SKETCH_PROMPTS.length) {
+      if (stepNumber === TASK_COUNT) {
         await submitParticipantSketches({
           prolificId,
+          studyVersion,
+          participantNumber,
+          conditionSequence,
           sketches: nextResponses,
         });
         localStorage.removeItem(CURRENT_STEP_KEY);
@@ -250,7 +279,7 @@ export default function SketchReasonsPage({
   return (
     <Flex direction="column" ml="9" mr="9" maxWidth="900px" gap="5">
       <Text mt="9" size="4" weight="medium">
-        Prompt {stepNumber} of {SKETCH_PROMPTS.length}
+        Prompt {stepNumber} of {TASK_COUNT}
       </Text>
 
       <Text size="5" weight="medium">
@@ -298,13 +327,13 @@ export default function SketchReasonsPage({
       />
 
       <Flex align="center" justify="center" mt="4" mb="8">
-        <Button size="3" onClick={handleNext} disabled={isSubmitting}>
-          {isSubmitting
-            ? "Saving..."
-            : stepNumber === SKETCH_PROMPTS.length
+      <Button size="3" onClick={handleNext} disabled={isSubmitting}>
+        {isSubmitting
+          ? "Saving..."
+            : stepNumber === TASK_COUNT
               ? "Continue to Survey"
               : "Next"}
-        </Button>
+      </Button>
       </Flex>
     </Flex>
   );

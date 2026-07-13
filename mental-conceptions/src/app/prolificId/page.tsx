@@ -5,6 +5,20 @@ import Link from 'next/link'
 import {Button, TextArea, Flex, Text} from '@radix-ui/themes'
 import { useRouter } from "next/navigation";
 
+const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
+const STUDY_VERSION_KEY = "studyVersion";
+
+async function fetchAssignment() {
+  const response = await fetch("/api/assignment");
+  if (!response.ok) {
+    throw new Error("Failed to fetch study assignment");
+  }
+
+  return response.json() as Promise<{
+    studyVersion: string;
+    participantNumber: number;
+  }>;
+}
 
 function ProlificId() {
   const [prolificId,setProlificId] = useState("");
@@ -25,6 +39,15 @@ function ProlificId() {
     localStorage.removeItem("sketchResponses");
     localStorage.removeItem("currentSketchStep");
     localStorage.removeItem("currentSketchRoute");
+    localStorage.removeItem(PARTICIPANT_NUMBER_KEY);
+    localStorage.removeItem(STUDY_VERSION_KEY);
+
+    const assignment = await fetchAssignment();
+    localStorage.setItem(
+      PARTICIPANT_NUMBER_KEY,
+      String(assignment.participantNumber)
+    );
+    localStorage.setItem(STUDY_VERSION_KEY, assignment.studyVersion);
     router.push("/instructions");
   
   };
