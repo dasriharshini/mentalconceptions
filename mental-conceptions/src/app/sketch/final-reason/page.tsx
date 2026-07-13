@@ -164,6 +164,9 @@ export default function FinalReasonPage() {
       </Text>
 
       <TextArea
+        onPaste={(event) => event.preventDefault()}
+        onCopy={(event) => event.preventDefault()}
+        onCut={(event) => event.preventDefault()}
         onChange={(event) => {
           const nextValue = event.target.value;
           setFinalAdditionalReason(nextValue);

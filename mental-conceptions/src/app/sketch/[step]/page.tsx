@@ -408,6 +408,9 @@ export default function SketchStepPage({
             Briefly describe what you drew: 
           </Text>
           <TextArea
+            onPaste={(event) => event.preventDefault()}
+            onCopy={(event) => event.preventDefault()}
+            onCut={(event) => event.preventDefault()}
             onChange={(event) => {
               const nextDescription = event.target.value;
               setDescription(nextDescription);

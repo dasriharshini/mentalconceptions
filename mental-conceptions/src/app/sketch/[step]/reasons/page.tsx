@@ -224,6 +224,9 @@ export default function SketchReasonsPage({
         Why does this drawing feel intuitive to you?
       </Text>
       <TextArea
+        onPaste={(event) => event.preventDefault()}
+        onCopy={(event) => event.preventDefault()}
+        onCut={(event) => event.preventDefault()}
         onChange={(event) => {
           const nextIntuitiveReason = event.target.value;
           setIntuitiveReason(nextIntuitiveReason);
