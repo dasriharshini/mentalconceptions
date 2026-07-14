@@ -243,7 +243,7 @@ export default function SketchReasonsPage({
           {isSubmitting
             ? "Saving..."
             : stepNumber === TASK_COUNT
-              ? "Continue to Final Question"
+              ? "Continue" // avoid saying final question here because we have qualtrics questions after this
               : "Next"}
         </Button>
       </Flex>

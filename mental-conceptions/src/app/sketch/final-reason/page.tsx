@@ -96,7 +96,7 @@ export default function FinalReasonPage() {
     const trimmedReason = finalAdditionalReason.trim();
 
     if (!trimmedReason) {
-      alert("Please answer the final question, or write NA.");
+      alert("Please answer this question, or write NA.");
       return;
     }
 
@@ -146,7 +146,7 @@ export default function FinalReasonPage() {
   if (isLoading) {
     return (
       <Flex align="center" justify="center" style={{ height: "100vh" }}>
-        <Text size="5">Loading final question...</Text>
+        <Text size="5">Loading question...</Text>
       </Flex>
     );
   }
@@ -154,11 +154,10 @@ export default function FinalReasonPage() {
   return (
     <Flex direction="column" ml="9" mr="9" maxWidth="900px" gap="5">
       <Text mt="9" size="4" weight="medium">
-        Final question
+        Post-Drawing Question
       </Text>
 
       <Text size="5" weight="medium">
-        <Strong>Dataset reflections: </Strong>
         Apart from what felt intuitive, were there any other reasons behind how
         you drew any of the datasets? If so, explain here. If not, write NA.
       </Text>

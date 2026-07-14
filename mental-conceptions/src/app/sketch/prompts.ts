@@ -14,9 +14,9 @@ type PromptBase = {
 
 const DATASET_A: PromptBase[] = [
   {
-    id: "rating",
+    id: "ranking",
     scenario:
-      "This dataset shows the ratings of three restaurants. Restaurant A has a rating of 4, Restaurant B has a rating of 5, and Restaurant C has a rating of 2. ",
+      "This dataset shows the rankings of three restaurants. Restaurant A has a ranking of 2, Restaurant B has a ranking of 3, and Restaurant C has a ranking of 1. ",
   },
   {
     id: "state",
@@ -26,12 +26,12 @@ const DATASET_A: PromptBase[] = [
   {
     id: "fruit",
     scenario:
-      "This dataset shows the results of a small local poll tallying the votes received for favorite fruits. Banana had 10 votes, strawberries had 15 votes, and blueberries had 12 votes. ",
+      "This dataset shows the results of a small local poll tallying the votes received for favorite fruits across two different voting areas. At the Community Center, Bananas had 10 votes, Strawberries had 12 votes, and Blueberries had 5 votes. At the Public Library, Bananas had 15 votes, Strawberries had 10 votes, and Blueberries had 15 votes. ",
   },
   {
-    id: "running",
+    id: "stock",
     scenario:
-      "This dataset shows a recreational runner's annual mileage over a five-year period. The distance run was 350 miles in 2020, 420 miles in 2021, 390 miles in 2022, 510 miles in 2023, and 600 miles in 2024. ",
+      "This dataset shows the stock price of a company over a five-year period. The stock price was $350 in 2020, $420 in 2021, $390 in 2022, $510 in 2023, and $600 in 2024. ",
   },
   {
     id: "depth",
@@ -41,15 +41,15 @@ const DATASET_A: PromptBase[] = [
   {
     id: "area",
     scenario:
-      "This dataset shows the total surface area of three lakes. Lake A recorded 60 square miles, Lake B recorded 45 square miles, and Lake C recorded 32 square miles. ",
+      "This dataset shows the total surface area of three lakes. Lake A recorded 45 square miles, Lake B recorded 32 square miles, and Lake C recorded 60 square miles. ",
   },
 ];
 
 const DATASET_B: PromptBase[] = [
   {
-    id: "ranking",
+    id: "rating",
     scenario:
-      "This dataset shows the rankings of three restaurants. Restaurant A has a ranking of 4, Restaurant B has a ranking of 5, and Restaurant C has a ranking of 2. ",
+      "This dataset shows the ratings of three restaurants. Restaurant A has a rating of 2, Restaurant B has a rating of 3, and Restaurant C has a rating of 1. ",
   },
   {
     id: "product",
@@ -59,12 +59,12 @@ const DATASET_B: PromptBase[] = [
   {
     id: "person",
     scenario:
-      "This dataset shows the results of a small local poll tallying the votes received for a leadership position. Blair had 10 votes, Stella had 15 votes, and Ben had 12 votes. ",
+      "This dataset shows the results of a small local poll tallying the votes received for a leadership position across three different voting areas. At the Community Center, Blair had 10 votes, Stella had 12 votes, and Ben had 5 votes. At the Public Library, Blair had 15 votes, Stella had 10 votes, and Ben had 15 votes. ",
   },
   {
-    id: "stock",
+    id: "running",
     scenario:
-      "This dataset shows the stock price of a company over a five-year period. The stock price was $350 in 2020, $420 in 2021, $390 in 2022, $510 in 2023, and $600 in 2024. ",
+      "This dataset shows a recreational runner's annual mileage over a five-year period. The distance run was 350 miles in 2020, 420 miles in 2021, 390 miles in 2022, 510 miles in 2023, and 600 miles in 2024. ",
   },
   {
     id: "elevation",
@@ -74,7 +74,7 @@ const DATASET_B: PromptBase[] = [
   {
     id: "length",
     scenario:
-      "This dataset shows the total length of three rivers. River A recorded 60 miles, River B recorded 45 miles, and River C recorded 32 miles. ",
+      "This dataset shows the total length of three rivers. River A recorded 45 miles, River B recorded 32 miles, and River C recorded 60 miles. ",
   },
 ];
 
@@ -82,11 +82,11 @@ export const TASK_COUNT = DATASET_A.length;
 
 export const BASE_CONDITION_SEQUENCE: SketchCondition[] = [
   "A",
-  "B",
-  "B",
   "A",
   "A",
-  "B",
+  "A",
+  "A",
+  "A",
 ];
 
 export const getComplementConditionSequence = (
