@@ -59,7 +59,7 @@ const DATASET_B: PromptBase[] = [
   {
     id: "person",
     scenario:
-      "This dataset shows the results of a small local poll tallying the votes received for a leadership position across three different voting areas. At the Community Center, Blair had 10 votes, Stella had 12 votes, and Ben had 5 votes. At the Public Library, Blair had 15 votes, Stella had 10 votes, and Ben had 15 votes. ",
+      "This dataset shows the results of a small local poll tallying the votes received for a leadership position across two different voting areas. At the Community Center, Blair had 10 votes, Stella had 12 votes, and Ben had 5 votes. At the Public Library, Blair had 15 votes, Stella had 10 votes, and Ben had 15 votes. ",
   },
   {
     id: "running",
