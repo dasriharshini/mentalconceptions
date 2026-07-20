@@ -6,17 +6,18 @@ import {
   TASK_COUNT,
 } from "../../sketch/prompts";
 
-const STUDY_VERSION = "balanced-condition-v1";
+const STUDY_VERSION = "fixed-condition-B";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   await connectMongoDB();
 
-  const completedCount = await Participant.countDocuments({
+/*   const completedCount = await Participant.countDocuments({
     studyVersion: STUDY_VERSION,
-  });
+  }); */
 
-  const participantNumber = completedCount + 1;
+  // const participantNumber = completedCount + 1;
+  const participantNumber = 2; // always assign condition B
   const conditionSequence = getConditionSequenceForParticipant(
     participantNumber
   );
