@@ -4,12 +4,18 @@ import React, { useState } from 'react'
 import Link from 'next/link'
 import {Button, TextArea, Flex, Text} from '@radix-ui/themes'
 import { useRouter } from "next/navigation";
+import {
+  WITHIN_ASSIGNMENT_KEY,
+  WITHIN_CURRENT_ROUTE_KEY,
+  WITHIN_CURRENT_STEP_KEY,
+  WITHIN_FINAL_REASON_KEY,
+  WITHIN_PAIR_RESPONSES_KEY,
+  WITHIN_PARTICIPANT_NUMBER_KEY,
+  WITHIN_STUDY_VERSION_KEY,
+} from "../libs/withinSubject";
 
-const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
-const STUDY_VERSION_KEY = "studyVersion";
-
-async function fetchAssignment() {
-  const response = await fetch("/api/assignment");
+async function fetchWithinAssignment() {
+  const response = await fetch("/api/within-assignment");
   if (!response.ok) {
     throw new Error("Failed to fetch study assignment");
   }
@@ -17,6 +23,8 @@ async function fetchAssignment() {
   return response.json() as Promise<{
     studyVersion: string;
     participantNumber: number;
+    pairOrder: string[];
+    layoutByPair: Record<string, { left: string; right: string }>;
   }>;
 }
 
@@ -40,15 +48,21 @@ function ProlificId() {
     localStorage.removeItem("currentSketchStep");
     localStorage.removeItem("currentSketchRoute");
     localStorage.removeItem("finalAdditionalReason");
-    localStorage.removeItem(PARTICIPANT_NUMBER_KEY);
-    localStorage.removeItem(STUDY_VERSION_KEY);
+    localStorage.removeItem(WITHIN_ASSIGNMENT_KEY);
+    localStorage.removeItem(WITHIN_PAIR_RESPONSES_KEY);
+    localStorage.removeItem(WITHIN_CURRENT_STEP_KEY);
+    localStorage.removeItem(WITHIN_CURRENT_ROUTE_KEY);
+    localStorage.removeItem(WITHIN_FINAL_REASON_KEY);
+    localStorage.removeItem(WITHIN_PARTICIPANT_NUMBER_KEY);
+    localStorage.removeItem(WITHIN_STUDY_VERSION_KEY);
 
-    const assignment = await fetchAssignment();
+    const assignment = await fetchWithinAssignment();
+    localStorage.setItem(WITHIN_ASSIGNMENT_KEY, JSON.stringify(assignment));
     localStorage.setItem(
-      PARTICIPANT_NUMBER_KEY,
+      WITHIN_PARTICIPANT_NUMBER_KEY,
       String(assignment.participantNumber)
     );
-    localStorage.setItem(STUDY_VERSION_KEY, assignment.studyVersion);
+    localStorage.setItem(WITHIN_STUDY_VERSION_KEY, assignment.studyVersion);
     router.push("/instructions");
   
   };

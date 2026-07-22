@@ -25,12 +25,46 @@ const sketchSchema = new Schema({
   paths: [canvasPathSchema],
 });
 
+const withinPairSideSchema = new Schema(
+  {
+    promptId: String,
+    condition: String,
+    scenario: String,
+    description: String,
+    intuitiveReason: String,
+    imageUrl: String,
+    paths: [canvasPathSchema],
+  },
+  { _id: false }
+);
+
+const pairResponseSchema = new Schema(
+  {
+    pairId: String,
+    pairOrder: Number,
+    leftPromptId: String,
+    rightPromptId: String,
+    leftCondition: String,
+    rightCondition: String,
+    left: withinPairSideSchema,
+    right: withinPairSideSchema,
+  },
+  { _id: false }
+);
+
 const participantSchema = new Schema(
   {
     prolificId: String,
     studyVersion: String,
     participantNumber: Number,
     conditionSequence: [String],
+    studyStatus: {
+      type: String,
+      default: "in_progress",
+    },
+    pairOrder: [String],
+    layoutByPair: Schema.Types.Mixed,
+    pairResponses: [pairResponseSchema],
     description1: String,
     description2: String,
     finalAdditionalReason: String,
