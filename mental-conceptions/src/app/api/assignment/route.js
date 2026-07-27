@@ -6,7 +6,7 @@ import {
   TASK_COUNT,
 } from "../../sketch/prompts";
 
-const STUDY_VERSION = "fixed-condition-B";
+const STUDY_VERSION = "new-datasets-0726";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
@@ -17,7 +17,7 @@ export async function GET() {
   }); */
 
   // const participantNumber = completedCount + 1;
-  const participantNumber = 2; // always assign condition B
+  const participantNumber = 1; // always assign condition A
   const conditionSequence = getConditionSequenceForParticipant(
     participantNumber
   );

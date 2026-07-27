@@ -81,13 +81,12 @@ export default function Instructions() {
     <Flex direction="column" ml="9" maxWidth="1000px" gap="6">
       <Text mt="7" size="5" weight="medium">
         <Strong>Instructions: </Strong> In this study, you will be making
-        drawings of your impressions about different datasets. Your goal is to
-        draw a representation of the data you&apos;re prompted with in a way
-        that <Strong>feels the most intuitive to you</Strong>.
+        drawings of your impressions about different datasets. Your goal is to draw a visual representation 
+        that <Strong>feels like the most natural way</Strong> to show the data you&apos;re prompted with. 
         <br />
         <br />
         There are no right or wrong ways to draw the datasets, as long as someone else would 
-        be able to <Strong>recognize</Strong> your drawings and <Strong>understand what dataset 
+        be able to <Strong>recognize</Strong> your drawings and <Strong>understand what data 
         you were prompted with. </Strong>You don’t need to worry about making the drawings pretty. 
 
         <br />

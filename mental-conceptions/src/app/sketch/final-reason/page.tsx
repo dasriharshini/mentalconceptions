@@ -158,7 +158,7 @@ export default function FinalReasonPage() {
       </Text>
 
       <Text size="5" weight="medium">
-        Apart from what felt intuitive, were there any other reasons behind how
+        Apart from what felt natural, were there any other reasons behind how
         you drew any of the datasets? If so, explain here. If not, write NA.
       </Text>
 

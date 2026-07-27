@@ -14,24 +14,9 @@ type PromptBase = {
 
 const DATASET_A: PromptBase[] = [
   {
-    id: "ranking",
-    scenario:
-      "This dataset shows the rankings of three restaurants. Restaurant A has a ranking of 2, Restaurant B has a ranking of 3, and Restaurant C has a ranking of 1. ",
-  },
-  {
-    id: "state",
-    scenario:
-      "This dataset shows annual retail performance by US state. California accounted for 125 thousand units, Texas accounted for 90 thousand units, and Florida accounted for 70 thousand units. ",
-  },
-  {
     id: "fruit",
     scenario:
       "This dataset shows the results of a small local poll tallying the votes received for favorite fruits across two different voting areas. At the Community Center, Bananas had 10 votes, Strawberries had 12 votes, and Blueberries had 5 votes. At the Public Library, Bananas had 15 votes, Strawberries had 10 votes, and Blueberries had 15 votes. ",
-  },
-  {
-    id: "stock",
-    scenario:
-      "This dataset shows the stock price of a company over a five-year period. The stock price was $350 in 2020, $420 in 2021, $390 in 2022, $510 in 2023, and $600 in 2024. ",
   },
   {
     id: "depth",
@@ -41,8 +26,24 @@ const DATASET_A: PromptBase[] = [
   {
     id: "area",
     scenario:
-      "This dataset shows the total surface area of three lakes. Lake A recorded 45 square miles, Lake B recorded 32 square miles, and Lake C recorded 60 square miles. ",
+      "This dataset shows the total surface area of three lakes. Lake A recorded 45 square miles, Lake B recorded 20 square miles, and Lake C recorded 60 square miles. ",
   },
+  {
+    id: "progressive",
+    scenario:
+      "This dataset shows the progressive index (ranging from 0 = supports no progressive policies to 100 = supports all progressive policies) of three politicians and the number of town halls they held last year. Politician A had a progressive index of 20 and held 25 town halls. Politician B had a progressive index of 50 and held 10 town halls. Politician C had a progressive index of 80 and held 30 town halls. ",
+  },
+  {
+    id: "ice",
+    scenario:
+  "This dataset shows the concentration of sea ice across three zones of the sea. The northern zone recorded 15% of sea ice, the central zone recorded 5%, and the southern zone recorded 10%."
+}, 
+  {
+    id: "direction", 
+    scenario:
+    "This dataset shows the wind direction measured at a weather station across three days. The wind direction was 90° at Day 1, 45° at Day 2, and 100° at Day 3. "
+  }
+
 ];
 
 const DATASET_B: PromptBase[] = [

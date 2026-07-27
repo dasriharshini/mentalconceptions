@@ -346,7 +346,7 @@ export default function SketchStepPage({
       >
         <Flex direction="column" gap="3">
           <Text size="5" weight="medium">
-            Draw a representation of this dataset that feels the most intuitive to you:
+            Draw a representation of this dataset that feels the most natural to you:
           </Text>
           <Text size="4">You can sketch in this space.</Text>
 
