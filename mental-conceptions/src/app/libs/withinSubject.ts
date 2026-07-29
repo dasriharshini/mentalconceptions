@@ -195,8 +195,8 @@ export const createWithinSubjectAssignment = (
     const isSwapped = Math.random() < 0.5;
 
     accumulator[pairId] = isSwapped
-      ? { left: pair.promptB, right: pair.promptA }
-      : { left: pair.promptA, right: pair.promptB };
+      ? { left: pair.promptB.id, right: pair.promptA.id }
+      : { left: pair.promptA.id, right: pair.promptB.id };
 
     return accumulator;
   }, {} as Record<WithinSubjectPairId, WithinSubjectPairLayout>);

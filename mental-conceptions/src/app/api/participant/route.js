@@ -1,12 +1,17 @@
 import Participant from "../../models/participant";
 import connectMongoDB from "../../libs/mongodb";
 import { NextResponse } from "next/server";
+import { WITHIN_STUDY_VERSION } from "../../libs/withinSubject";
 
 export async function POST(request) {
   const {
     prolificId,
     studyVersion,
     participantNumber,
+    studyStatus,
+    pairOrder,
+    layoutByPair,
+    pairResponses,
     conditionSequence,
     description1,
     description2,
@@ -21,6 +26,10 @@ export async function POST(request) {
     prolificId,
     studyVersion,
     participantNumber,
+    studyStatus,
+    pairOrder,
+    layoutByPair,
+    pairResponses,
     conditionSequence,
     description1,
     description2,
@@ -37,6 +46,10 @@ export async function POST(request) {
     prolificId,
     studyVersion,
     participantNumber,
+    studyStatus,
+    pairOrder,
+    layoutByPair,
+    pairResponses,
     conditionSequence,
     description1,
     description2,
@@ -49,20 +62,36 @@ export async function POST(request) {
   });
 
   try {
-    const participant = await Participant.create({
-      prolificId,
-      studyVersion,
-      participantNumber,
-      conditionSequence,
-      description1,
-      description2,
-      finalAdditionalReason,
-      gender,
-      drawingMethod,
-      skills,
-      feedback,
-      sketches,
-    });
+    const participant =
+      studyVersion === WITHIN_STUDY_VERSION || pairResponses
+        ? await Participant.create({
+            prolificId,
+            studyVersion,
+            participantNumber,
+            studyStatus: studyStatus ?? "completed",
+            pairOrder,
+            layoutByPair,
+            pairResponses,
+            finalAdditionalReason,
+            gender,
+            drawingMethod,
+            skills,
+            feedback,
+          })
+        : await Participant.create({
+            prolificId,
+            studyVersion,
+            participantNumber,
+            conditionSequence,
+            description1,
+            description2,
+            finalAdditionalReason,
+            gender,
+            drawingMethod,
+            skills,
+            feedback,
+            sketches,
+          });
     console.log("Created participant:", participant);
 
     return NextResponse.json({ message: "Created" }, { status: 201 });

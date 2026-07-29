@@ -1,47 +1,36 @@
 "use client";
 
-import { Button, Flex, Strong, Text, Box } from "@radix-ui/themes";
+import { useEffect } from "react";
+import { Button, Flex, Strong, Text } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
-import Image from 'next/image';
 import {
-  getSketchPromptsForParticipant,
-  TASK_COUNT,
-} from "../sketch/prompts";
+  WITHIN_ASSIGNMENT_KEY,
+  WITHIN_CURRENT_ROUTE_KEY,
+  WITHIN_CURRENT_STEP_KEY,
+  WITHIN_PARTICIPANT_NUMBER_KEY,
+  type WithinSubjectAssignment,
+} from "../libs/withinSubject";
 
-const ORDER_KEY = "sketchPromptOrder";
-const CURRENT_STEP_KEY = "currentSketchStep";
-const CURRENT_ROUTE_KEY = "currentSketchRoute";
-const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
+function loadAssignment(): WithinSubjectAssignment | null {
+  const rawAssignment = localStorage.getItem(WITHIN_ASSIGNMENT_KEY);
 
-function createRandomizedOrder() {
-  const participantNumber = Number(
-    localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
-  );
-
-  if (!Number.isInteger(participantNumber) || participantNumber < 1) {
-    return [];
+  if (!rawAssignment) {
+    return null;
   }
 
-  const promptIds = getSketchPromptsForParticipant(participantNumber).map(
-    (prompt) => prompt.id
-  );
-
-  for (let index = promptIds.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    const current = promptIds[index];
-    promptIds[index] = promptIds[swapIndex];
-    promptIds[swapIndex] = current;
+  try {
+    return JSON.parse(rawAssignment) as WithinSubjectAssignment;
+  } catch {
+    return null;
   }
-
-  return promptIds;
 }
 
 export default function Instructions() {
   const router = useRouter();
 
-  const handleNext = () => {
+  useEffect(() => {
     const participantNumber = Number(
-      localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
+      localStorage.getItem(WITHIN_PARTICIPANT_NUMBER_KEY) ?? "0"
     );
 
     if (!Number.isInteger(participantNumber) || participantNumber < 1) {
@@ -49,63 +38,56 @@ export default function Instructions() {
       return;
     }
 
-    const savedOrder = localStorage.getItem(ORDER_KEY);
-    const parsedOrder = savedOrder ? (JSON.parse(savedOrder) as string[]) : [];
-    const nextOrder =
-      parsedOrder.length === TASK_COUNT
-        ? parsedOrder
-        : createRandomizedOrder();
-    const savedStep = Number(localStorage.getItem(CURRENT_STEP_KEY) ?? "1");
-    const nextStep =
-      Number.isInteger(savedStep) &&
-      savedStep >= 1 &&
-      savedStep <= TASK_COUNT
-        ? savedStep
-        : 1;
-    const savedRoute = localStorage.getItem(CURRENT_ROUTE_KEY);
-    const nextRoute =
-      savedRoute &&
-      /^\/sketch\/\d+(\/reasons)?$/.test(savedRoute)
-        ? savedRoute
-        : `/sketch/${nextStep}`;
+    if (!loadAssignment()) {
+      router.replace("/prolificId");
+      return;
+    }
+  }, [router]);
 
-    localStorage.setItem(ORDER_KEY, JSON.stringify(nextOrder));
-    router.push(nextRoute);
+  const handleNext = () => {
+    const assignment = loadAssignment();
+
+    if (!assignment) {
+      router.replace("/prolificId");
+      return;
+    }
+
+    const firstPairId = assignment.pairOrder[0];
+    localStorage.setItem(WITHIN_CURRENT_STEP_KEY, firstPairId);
+    localStorage.setItem(WITHIN_CURRENT_ROUTE_KEY, `/pairs/${firstPairId}`);
+    router.push(`/pairs/${firstPairId}`);
   };
-
-  const captions = [<>This drawing <Strong>isn’t recognizable</Strong>.</>,
-  <>This drawing is recognizable, but it <Strong>doesn’t allow someone to understand the data</Strong> (i.e., how many units of apples and grapes were sold).</>];
-  const imageNames = ["not_recognizable", "no_data"];
 
   return (
     <Flex direction="column" ml="9" maxWidth="1000px" gap="6">
       <Text mt="7" size="5" weight="medium">
         <Strong>Instructions: </Strong> In this study, you will be making
-        drawings of your impressions about different datasets. Your goal is to
-        draw a representation of the data you&apos;re prompted with in a way
-        that <Strong>feels the most intuitive to you</Strong>.
+        drawings of your impressions about paired versions of the same dataset.
+        Your goal is to draw a representation of each version in a way that
+        <Strong> feels the most intuitive to you</Strong>.
         <br />
         <br />
-        There are no right or wrong ways to draw the datasets, as long as someone else would 
-        be able to <Strong>recognize</Strong> your drawings and <Strong>understand what dataset 
-        you were prompted with. </Strong>You don’t need to worry about making the drawings pretty. 
-
+        For each pair, you will see two versions of the dataset and sketch both
+        of them on separate canvases. There are no right or wrong ways to draw
+        the datasets, as long as someone else would be able to <Strong>
+          recognize
+        </Strong>{" "}
+        your drawings and <Strong>understand what dataset you were prompted
+        with</Strong>. You don&apos;t need to worry about making the drawings
+        pretty.
         <br />
         <br />
-        Because we are interested in your unique personal perspective, <Strong>please 
-          do not use AI tools in any part of this study. </Strong>
-        AI-generated answers cannot capture your individual voice, and they unfortunately 
-        make the data unusable for our research goals. Thank you for sharing your genuine thoughts with us! 
-
+        Because we are interested in your unique personal perspective,{" "}
+        <Strong>please do not use AI tools in any part of this study.</Strong>{" "}
+        AI-generated answers cannot capture your individual voice, and they
+        unfortunately make the data unusable for our research goals. Thank you
+        for sharing your genuine thoughts with us!
       </Text>
 
-     
       <Text size="5" weight="medium">
         Click the &quot;Next&quot; button below when you&apos;re ready to start
         the study.
       </Text>
-
-
 
       <Button size="3" onClick={handleNext} style={{ width: "fit-content" }}>
         Next

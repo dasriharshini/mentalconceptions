@@ -444,6 +444,8 @@ export default function WithinSubjectPairPage({
     );
   }
 
+  const totalPairs = assignment?.pairOrder.length ?? 0;
+
   const renderSideCard = (side: SideKey) => {
     const prompt = activePairPrompt[side];
     const canvasRef = side === "left" ? leftCanvasRef : rightCanvasRef;
@@ -551,7 +553,7 @@ export default function WithinSubjectPairPage({
   return (
     <Flex direction="column" ml="9" mr="9" maxWidth="1280px" gap="6">
       <Text mt="9" size="4" weight="medium">
-        Pair {pairOrderIndex + 1} of {assignment.pairOrder.length}
+        Pair {pairOrderIndex + 1} of {totalPairs}
       </Text>
 
       <Text size="5" weight="medium">
