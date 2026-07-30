@@ -4,7 +4,7 @@ import { Button, Flex, Strong, Text, Box } from "@radix-ui/themes";
 import { useRouter } from "next/navigation";
 import Image from 'next/image';
 import {
-  getSketchPromptsForParticipant,
+  createRandomizedPromptOrder,
   TASK_COUNT,
 } from "../sketch/prompts";
 
@@ -12,29 +12,6 @@ const ORDER_KEY = "sketchPromptOrder";
 const CURRENT_STEP_KEY = "currentSketchStep";
 const CURRENT_ROUTE_KEY = "currentSketchRoute";
 const PARTICIPANT_NUMBER_KEY = "studyParticipantNumber";
-
-function createRandomizedOrder() {
-  const participantNumber = Number(
-    localStorage.getItem(PARTICIPANT_NUMBER_KEY) ?? "0"
-  );
-
-  if (!Number.isInteger(participantNumber) || participantNumber < 1) {
-    return [];
-  }
-
-  const promptIds = getSketchPromptsForParticipant(participantNumber).map(
-    (prompt) => prompt.id
-  );
-
-  for (let index = promptIds.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    const current = promptIds[index];
-    promptIds[index] = promptIds[swapIndex];
-    promptIds[swapIndex] = current;
-  }
-
-  return promptIds;
-}
 
 export default function Instructions() {
   const router = useRouter();
@@ -54,7 +31,7 @@ export default function Instructions() {
     const nextOrder =
       parsedOrder.length === TASK_COUNT
         ? parsedOrder
-        : createRandomizedOrder();
+        : createRandomizedPromptOrder(participantNumber);
     const savedStep = Number(localStorage.getItem(CURRENT_STEP_KEY) ?? "1");
     const nextStep =
       Number.isInteger(savedStep) &&
