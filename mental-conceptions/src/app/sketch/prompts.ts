@@ -14,34 +14,34 @@ type PromptBase = {
 
 const DATASET_A: PromptBase[] = [
   {
-    id: "fruit",
+    id: "ranking",
     scenario:
-      "This dataset shows the results of a small local poll tallying the votes received for favorite fruits across two different voting areas. At the Community Center, Bananas had 10 votes, Strawberries had 12 votes, and Blueberries had 5 votes. At the Public Library, Bananas had 15 votes, Strawberries had 10 votes, and Blueberries had 15 votes. ",
+      "This dataset shows the rankings of three restaurants. Restaurant N has a ranking of 2, Restaurant G has a ranking of 3, and Restaurant S has a ranking of 1. ",
   },
   {
-    id: "depth",
+    id: "countdown",
     scenario:
-      "This dataset shows the depth reached by each exploration team while surveying an underwater canyon. Team A reached a depth of 2,400 meters. Team B reached 1,000 meters, and Team C reached 1,500 meters. ",
+      "This dataset shows the number of daily tasks a team completed at different time points before the project deadline. The team completed 6 tasks at 2 days before the project deadline, 4 tasks at 3 days before the project deadline, and 10 tasks at 1 day before the project deadline. "
   },
   {
-    id: "area",
+    id: "sunlight",
     scenario:
-      "This dataset shows the total surface area of three lakes. Lake A recorded 45 square miles, Lake B recorded 20 square miles, and Lake C recorded 60 square miles. ",
+      "This dataset shows the level of sunlight exposure across three zones of the sea. The central zone had 80% of sunlight exposure, the northern zone had 20%, and the southern zone had 50%. ",
   },
   {
-    id: "progressive",
+    id: "time",
     scenario:
-      "This dataset shows the progressive index (ranging from 0 = supports no progressive policies to 100 = supports all progressive policies) of three politicians and the number of town halls they held last year. Politician A had a progressive index of 20 and held 25 town halls. Politician B had a progressive index of 50 and held 10 town halls. Politician C had a progressive index of 80 and held 30 town halls. ",
+      "This dataset shows the class assignments that a student has completed during different times of day. The student completed science in the afternoon, English in the morning, and math in the evening. ",
   },
   {
-    id: "ice",
+    id: "politics",
     scenario:
-  "This dataset shows the concentration of sea ice across three zones of the sea. The northern zone recorded 15% of sea ice, the central zone recorded 5%, and the southern zone recorded 10%."
+  "This dataset shows the political orientation scores of three politicians, where -100 = completely liberal, 0 = neutral, and 100 = completely conservative. Politician N had a score of 0, Politician G had a score of -30, and Politician S had a score of 80. "
 }, 
   {
-    id: "direction", 
+    id: "season", 
     scenario:
-    "This dataset shows the wind direction measured at a weather station across three days. The wind direction was 90° at Day 1, 45° at Day 2, and 100° at Day 3. "
+    "This dataset shows the bird sightings at a nature reserve during three seasons. The reserve had 50 sightings in the spring season, 20 sightings in the fall season, and 80 sightings in the following spring. "
   }
 
 ];

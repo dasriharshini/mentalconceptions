@@ -221,7 +221,7 @@ export default function SketchReasonsPage({
       </Text>
 
       <Text size="5" weight="medium">
-        Why does this drawing feel natural to you?
+        Why did this drawing feel natural to you?
       </Text>
       <TextArea
         onPaste={(event) => event.preventDefault()}

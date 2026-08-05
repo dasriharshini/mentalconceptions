@@ -6,7 +6,7 @@ import {
   TASK_COUNT,
 } from "../../sketch/prompts";
 
-const STUDY_VERSION = "new-datasets-0726";
+const STUDY_VERSION = "justified-datasets-0805";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
