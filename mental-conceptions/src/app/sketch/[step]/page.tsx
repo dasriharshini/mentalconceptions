@@ -8,6 +8,8 @@ import {
   EraserIcon,
   Pencil1Icon,
   ResetIcon,
+  TrashIcon, 
+  ReloadIcon
 } from "@radix-ui/react-icons";
 import {
   ReactSketchCanvas,
@@ -222,6 +224,15 @@ export default function SketchStepPage({
     loadedPromptIdRef.current = activePrompt.id;
   }, [activePrompt, isLoading, savedPaths]);
 
+  const handleUndo = () => {
+    canvasRef.current?.undo();
+  };
+
+  const handleRedo = () => {
+    canvasRef.current?.redo();
+  };
+
+
   const handleClearCanvasClick = () => {
     canvasRef.current?.clearCanvas();
     setEraseMode(false);
@@ -330,7 +341,7 @@ export default function SketchStepPage({
 
   return (
     <Flex direction="column" ml="9" mr="9" maxWidth="1200px" gap="6">
-      <Text mt="9" size="4" weight="medium">
+      <Text mt="3" size="4" weight="medium">
         Prompt {stepNumber} of {TASK_COUNT}
       </Text>
 
@@ -350,7 +361,7 @@ export default function SketchStepPage({
           </Text>
           <Text size="4">You can sketch in this space.</Text>
 
-          <Box width="400px" height="400px">
+          <Box width="450px" height="450px">
             <ReactSketchCanvas
               ref={canvasRef}
               style={styles}
@@ -362,26 +373,34 @@ export default function SketchStepPage({
             />
           </Box>
 
-          <Flex direction="row" gap="4" align="center" wrap="wrap">
-            <Button size="3" onClick={handleEraserClick}>
+          <Flex direction="row" gap="2" align="center" wrap="wrap">
+            <Button size="2" onClick={handleEraserClick}>
               <EraserIcon />
               Erase
             </Button>
-            <Button size="3" onClick={handlePenClick}>
+            <Button size="2" onClick={handlePenClick}>
               <Pencil1Icon />
               Draw
             </Button>
-            <Button size="3" disabled={eraseMode} onClick={handleClearCanvasClick}>
+            <Button size="2" onClick={handleUndo}>
               <ResetIcon />
+              Undo
+            </Button>
+            <Button size="2" onClick={handleRedo}>
+              <ReloadIcon />
+              Redo
+            </Button>
+            <Button size="2" disabled={eraseMode} onClick={handleClearCanvasClick}>
+              <TrashIcon />
               Clear Canvas
             </Button>
           </Flex>
 
-          <Flex direction="column" gap="2">
+          <Flex direction="row" gap="2">
             <Text size="3" weight="medium">
               Pick pen color:
             </Text>
-            <Flex direction="row" gap="2" align="center" wrap="wrap">
+
               <input
                 type="color"
                 value={strokeColor}
@@ -399,7 +418,7 @@ export default function SketchStepPage({
                   cursor: "pointer",
                 }}
               />
-            </Flex>
+
           </Flex>
         </Flex>
 
@@ -421,14 +440,16 @@ export default function SketchStepPage({
             resize="vertical"
             placeholder="Please answer in your own words. Do not use AI tools or external websites; we're interested in your genuine perspective."
           />
+          <Flex direction="column" align="center" justify="center" mt="0" mb="8">
+            <Button size="3" onClick={handleNext} disabled={isSubmitting}>
+              {isSubmitting ? "Saving..." : "Next"}
+            </Button>
+          </Flex>
         </Flex>
+        
       </Flex>
 
-      <Flex align="center" justify="center" mt="4" mb="8">
-        <Button size="3" onClick={handleNext} disabled={isSubmitting}>
-          {isSubmitting ? "Saving..." : "Next"}
-        </Button>
-      </Flex>
+      
     </Flex>
   );
 }
