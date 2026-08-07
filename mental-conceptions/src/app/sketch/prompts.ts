@@ -79,7 +79,7 @@ const DATASET_B: PromptBase[] = [
   },
 ];
 
-export const TASK_COUNT = DATASET_A.length;
+export const TASK_COUNT = DATASET_B.length; // change this depending on which dataset is used
 
 export const BASE_CONDITION_SEQUENCE: SketchCondition[] = [
   "A",
