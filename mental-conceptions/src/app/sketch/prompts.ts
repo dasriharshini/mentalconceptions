@@ -50,32 +50,32 @@ const DATASET_B: PromptBase[] = [
   {
     id: "rating",
     scenario:
-      "This dataset shows the ratings of three restaurants. Restaurant A has a rating of 2, Restaurant B has a rating of 3, and Restaurant C has a rating of 1. ",
+      "This dataset shows the ratings of three restaurants. Restaurant N has a rating of 2, Restaurant G has a rating of 3, and Restaurant S has a rating of 1. ",
   },
   {
-    id: "product",
+    id: "countup",
     scenario:
-      "This dataset shows annual retail performance by product department. Electronics accounted for 125 thousand units, Furniture accounted for 90 thousand units, and Clothing accounted for 70 thousand units. ",
+      "This dataset shows the number of daily tasks a team completed at different time points since the project started. The team completed 6 tasks at 2 days since the project started, 4 tasks at 3 days since the project started, and 10 tasks at 1 day since the project started. ",
   },
   {
-    id: "person",
+    id: "oil",
     scenario:
-      "This dataset shows the results of a small local poll tallying the votes received for a leadership position across two different voting areas. At the Community Center, Blair had 10 votes, Stella had 12 votes, and Ben had 5 votes. At the Public Library, Blair had 15 votes, Stella had 10 votes, and Ben had 15 votes. ",
+      "This dataset shows the level of oil contamination across three zones of the sea. The central zone had 80% of oil contamination, the northern zone had 20%, and the southern zone had 50%. ",
   },
   {
-    id: "running",
+    id: "effort",
     scenario:
-      "This dataset shows a recreational runner's annual mileage over a five-year period. The distance run was 350 miles in 2020, 420 miles in 2021, 390 miles in 2022, 510 miles in 2023, and 600 miles in 2024. ",
+      "This dataset shows the class assignments that a student has considered as different levels of effort. The student considered science as medium effort, English as low effort, and math as high effort. ",
   },
   {
-    id: "elevation",
+    id: "support",
     scenario:
-      "This dataset shows the elevation reached by each exploration team while surveying a mountain range. Team A reached an elevation of 2,400 meters. Team B reached 1,000 meters, and Team C reached 1,500 meters. ",
+      "This dataset shows the public support scores of three politicians, where -100 = completely opposed, 0 = neutral, and 100 = completely supportive. Politician N had a score of 0, Politician G had a score of -30, and Politician S had a score of 80. ",
   },
   {
-    id: "length",
+    id: "year",
     scenario:
-      "This dataset shows the total length of three rivers. River A recorded 45 miles, River B recorded 32 miles, and River C recorded 60 miles. ",
+      "This dataset shows the bird sightings at a nature reserve during three years. The reserve had 50 sightings in the year 2010, 20 sightings in the year 2012, and 60 sightings in the year 2014. ",
   },
 ];
 
